@@ -65,7 +65,7 @@ transit <- transit %>%
   group_by(Period) 
 ```
 
-```{r echo=FALSE, message=FALSE, layout='l-body-outset'}
+```{r echo=FALSE, message=FALSE, layout='l-body'}
 # plot ridership 
 plt.NYC.riders <- transit %>% 
   dplyr::filter(`Indicator Name` == 'Total Ridership - Subways') %>%
@@ -85,7 +85,7 @@ ggplotly(plt.NYC.riders) %>%
 
 Terminal On-Time Performance measures the percentage of trains arriving at their destination terminals as scheduled. A train is counted as on-time if it arrives at its destination early, on time, or no more than five minutes late, and has not skipped any planned stops. TOTP is a legacy metric that provides a measure of trains arriving within the standard, and not a direct measure of customer travel time, particularly since relatively few customers travel all the way to the end of a line.
 
-```{r echo=FALSE, message=FALSE, layout='l-body-outset'}
+```{r echo=FALSE, message=FALSE, layout='l-body'}
 # plot On-Time Performance for all subway lines
 plt.NYC.OTP <- transit %>% 
   dplyr::filter(`Indicator Name` == 'On-Time Performance (Terminal)') %>%
@@ -98,13 +98,13 @@ plt.NYC.OTP <- transit %>%
 # convert to plotly object
 ggplotly(plt.NYC.OTP) %>% 
   layout(title = 'Subway cars are getting worse at arriving at their destination on schedule.', 
-  titlefont = list(size = 17)) %>%
+  titlefont = list(size = 15)) %>%
   config(displayModeBar = FALSE)
 ```
 
 Wait Assessment measures how regularly the trains are spaced during peak hours. To meet the standard, the headway (time between trains) can be no greater than 25% more than the scheduled headway. This provides a percentage of trains passing the standard, but does not account for extra service operated, is not weighted to how many customers are waiting for the trains at different stations, does not distinguish between relatively minor gaps in service and major delays, and is not a true measurement of time customers spend waiting on the platform.
 
-```{r echo=FALSE, message=FALSE, layout='l-body-outset'}
+```{r echo=FALSE, message=FALSE, layout='l-body'}
 # plot subway wait assessment for all subway lines
 plt.NYC.SWA <- transit %>% 
   dplyr::filter(`Indicator Name` == 'Subway Wait Assessment') %>%
@@ -123,7 +123,7 @@ ggplotly(plt.NYC.SWA) %>%
 
 Mean Distance Between Failures (MDBF) reports how frequently car-related problems such as door failures, loss of motor power, or brake issues cause a delay of over five minutes. It is calculated by dividing the number of miles train cars run in service by the number of incidents due to car‐related problems.
 
-```{r echo=FALSE, message=FALSE, layout='l-body-outset'}
+```{r echo=FALSE, message=FALSE, layout='l-body'}
 # plot mean distance between failures for all subway lines 
 plt.NYC.fail <- transit %>% 
   dplyr::filter(`Indicator Name` == 'Mean Distance Between Failures - Subways') %>%
@@ -162,7 +162,7 @@ sub <- sub %>%
 
 ```
 
-```{r echo=FALSE, message=FALSE, layout='l-body-outset'}
+```{r echo=FALSE, message=FALSE, layout='l-body'}
 # plot cyclist injuries per week 
 plt.sub <- sub %>% 
   ggplot(aes(x = week, y = cyclist_injuries)) +
