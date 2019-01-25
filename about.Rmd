@@ -1,0 +1,11 @@
+---
+title: "About this blog"
+description: |
+  Why a seperate website for writing?
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This blog is built through the [**Radix**](https://rstudio.github.io/radix) framework for scientific publishing. I use it to communicate the statistical programming work I do with fewer restrictions. Wix is great for making pretty websites, but not for sharing code. You can learn more about me at [**my website.**](https://jbixon13.wixsite.com/website) 

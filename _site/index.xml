@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Jason Bixon</title>
+    <link>https://jasonbixon.netlify.com</link>
+    <atom:link href="https://jasonbixon.netlify.com/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Blog | Jason Bixon
+</description>
+    <generator>Radix</generator>
+    <lastBuildDate>Thu, 24 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Mapping Cyclist Safety in New York City</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixon.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</link>
+      <description>Is there a relationship between bike path access and cyclist injuries?</description>
+      <guid>https://jasonbixon.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</guid>
+      <pubDate>Thu, 24 Jan 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixon.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg" medium="image" type="image/jpeg"/>
+    </item>
+    <item>
+      <title>New Year, New (First) Blog</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixon.netlify.com/posts/2019-01-24-new-year-new-first-blog</link>
+      <description>Trying my best.</description>
+      <guid>https://jasonbixon.netlify.com/posts/2019-01-24-new-year-new-first-blog</guid>
+      <pubDate>Thu, 24 Jan 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixon.netlify.com/posts/2019-01-24-new-year-new-first-blog/preview.jpg" medium="image" type="image/jpeg"/>
+    </item>
+  </channel>
+</rss>

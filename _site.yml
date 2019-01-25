@@ -1,0 +1,16 @@
+name: "Radix"
+title: "Jason Bixon"
+description: |
+  Blog | Jason Bixon
+output_dir: "_site"
+base_url: https://jasonbixon.netlify.com
+navbar:
+  logo: images/brain.png
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "My Website"
+      href: "https://jbixon13.wixsite.com/website"
+output: radix::radix_article
