@@ -65,7 +65,7 @@ transit <- transit %>%
   group_by(Period) 
 ```
 
-```{r echo=FALSE, message=FALSE, layout='l-body'}
+```{r echo=FALSE, message=FALSE, out.width='80%'}
 # plot ridership 
 plt.NYC.riders <- transit %>% 
   dplyr::filter(`Indicator Name` == 'Total Ridership - Subways') %>%
@@ -281,3 +281,16 @@ how many cyclists -- could use citibike data as a proxy
 Analyze cyclist accidents better: conduct time-series analysis with seasonality, ARIMA, etc.  
 Update map -- add bike network (by year) and change accidents to by year grouping 
 conclude with hypothesis of whether L train shutdown has increased accidents 
+Change drag behavior when plotly is updated to 1.43
+
+```{r}
+# test <- NYPD %>%
+#   filter(LATITUDE != is.na(TRUE)) %>% 
+#   st_as_sf(coords = c('LATITUDE', 'LONGITUDE')) 
+#   
+# test_trans <- test %>% 
+#   st_transform(crs = 4326)
+# 
+# dist <- st_is_within_distance(test_trans, bike_network_trans, dist = 100)
+```
+
