@@ -43,13 +43,13 @@ MTA_KPI <- read_csv('data/metropolitan-transportation-authority-mta-performance-
 NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE = col_character()))                                          # NYPD collision data 
 ```
 
-I was inspired by this [CityLab](https://www.citylab.com/perspective/2018/12/new-york-city-electric-bikes-transit-crisis-de-blasio/577969/) article detailing the impending transportation crisis due to the MTA L Line shutdown. Specifically, I am interested in observing whether the shutdown contributes to an increase in cyclist injuries due to motor vehicle collisions as about [275,000 L Line riders](https://ny.curbed.com/2018/10/3/17925038/nyc-subway-l-train-shutdown-mitigation-alternatives) seek alternatives.  
+I was inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12/new-york-city-electric-bikes-transit-crisis-de-blasio/577969/) article detailing the impending transportation crisis due to the MTA L Line shutdown. Specifically, I am interested in observing whether the shutdown contributes to an increase in cyclist injuries due to motor vehicle collisions as about [**275,000 L Line riders**](https://ny.curbed.com/2018/10/3/17925038/nyc-subway-l-train-shutdown-mitigation-alternatives) seek alternatives.  
   
-[NYC DOT](http://web.mta.info/sandy/CanarsieTunnelRebuildingProcess.html#sdtr) has predicted about 2% of L Line riders to switch to cycling, while about 79% are predicted to move to other subway lines. I could investigate the dispersion of L Train riders to other options as a whole if data is available, but for now I will focus on cyclist safety as it's more approachable with currently available data.    
+[**NYC DOT**](http://web.mta.info/sandy/CanarsieTunnelRebuildingProcess.html#sdtr) has predicted about 2% of L Line riders to switch to cycling, while about 79% are predicted to move to other subway lines. I could investigate the dispersion of L Train riders to other options as a whole if data is available, but for now I will focus on cyclist safety as it's more approachable with currently available data.    
 
 ***  
 ### Let's start by looking at some performance metrics for the MTA subway network as a whole.   
-Some of the performance metric definitions are opaque, so I'll [specify where necessary.](http://dashboard.mta.info/)  
+Some of the performance metric definitions are opaque, so I'll [**specify where necessary.**](http://dashboard.mta.info/)  
 
 ```{r echo=FALSE}
 # convert Period to date variable
@@ -280,10 +280,10 @@ summary(arima1)
 
 This is an ongoing project that I am doing in my free time. If you have any constructive criticism please feel free to reach out, especially with suggestions about spatial regression methodology.  
 
-how many cyclists -- could use citibike data as a proxy  
-Analyze cyclist accidents better: conduct time-series analysis with seasonality, ARIMA, etc.  
-Update map -- add bike network (by year) and change accidents to by year grouping 
-Change drag behavior (for mobile) when [**plotly**](https://github.com/ropensci/plotly) is updated to 1.43
+* how many cyclists -- could use citibike data as a proxy  
+* Analyze cyclist accidents better: conduct time-series analysis with seasonality, ARIMA, etc.   
+* Update map -- add bike network (by year) and change accidents to by year grouping  
+* Change drag behavior (for mobile) when [**plotly**](https://github.com/ropensci/plotly) is updated to 1.43
 
 ```{r}
 # test <- NYPD %>%
