@@ -10,6 +10,7 @@ author:
     affiliation: Merkle Inc.
     affiliation_url: https://merkleinc.com
 date: 01-24-2019
+repository_url: https://github.com/jbixon13/Radix-blog
 output:
   radix::radix_article:
     self_contained: false
@@ -79,7 +80,7 @@ plt.NYC.riders <- transit %>%
 # convert to plotly object
 ggplotly(plt.NYC.riders) %>% 
   layout(title = 'Monthly ridership for the entire network has increased.',
-  titlefont = list(size = 15)) %>%
+  titlefont = list(size = 16)) %>%
   config(displayModeBar = FALSE)
 ```
 
@@ -97,7 +98,7 @@ plt.NYC.OTP <- transit %>%
 
 # convert to plotly object
 ggplotly(plt.NYC.OTP) %>% 
-  layout(title = 'Subway cars are getting worse at arriving at their destination on schedule.', 
+  layout(title = 'Subway cars getting worse at arriving at their destination on schedule.', 
   titlefont = list(size = 15)) %>%
   config(displayModeBar = FALSE)
 ```
@@ -116,8 +117,8 @@ plt.NYC.SWA <- transit %>%
 
 # convert to plotly object
 ggplotly(plt.NYC.SWA) %>% 
-  layout(title = 'Subway cars are arriving with a less routine timing between them.',
-  titlefont = list(size = 17)) %>%
+  layout(title = 'Subway cars arriving with less routine timing between them.',
+  titlefont = list(size = 16)) %>%
   config(displayModeBar = FALSE) 
 ```
 
@@ -137,7 +138,7 @@ plt.NYC.fail <- transit %>%
 # convert to plotly object
 ggplotly(plt.NYC.fail) %>% 
   layout(title = 'Subway cars are breaking down more frequently.',
-  titlefont = list(size = 17)) %>% 
+  titlefont = list(size = 16)) %>% 
   config(displayModeBar = FALSE)
 ```
 
@@ -169,13 +170,13 @@ plt.sub <- sub %>%
   geom_point(color = 'steelblue4', alpha = .7) + 
   geom_smooth(method='lm') + 
   xlab('Week') +
-  ylab('Cyclist Injuries') + 
+  ylab('Cyclist Injuries Per Week') + 
   theme_classic()
 
 # convert to plotly object
 ggplotly(plt.sub) %>% 
-  layout(title = 'Weekly Cyclist Injuries Resulting from Motor Vehicle Collisions',
-  titlefont = list(size = 17)) %>%
+  layout(title = 'Cyclist injuries due to vehicle collisions increasing.',
+  titlefont = list(size = 16)) %>%
   config(displayModeBar = FALSE)
 ```
 
