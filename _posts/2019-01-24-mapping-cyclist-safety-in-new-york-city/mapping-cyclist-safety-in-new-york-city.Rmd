@@ -98,7 +98,7 @@ plt.NYC.OTP <- transit %>%
 
 # convert to plotly object
 ggplotly(plt.NYC.OTP) %>% 
-  layout(title = 'Subway cars getting worse at arriving at their destination on schedule.', 
+  layout(title = 'Subway cars arriving at their destination on schedule less.', 
   titlefont = list(size = 15)) %>%
   config(displayModeBar = FALSE)
 ```
@@ -117,7 +117,7 @@ plt.NYC.SWA <- transit %>%
 
 # convert to plotly object
 ggplotly(plt.NYC.SWA) %>% 
-  layout(title = 'Subway cars arriving with less routine timing between them.',
+  layout(title = 'Subway cars less routinely spaced during peak hours.',
   titlefont = list(size = 16)) %>%
   config(displayModeBar = FALSE) 
 ```
@@ -283,8 +283,7 @@ This is an ongoing project that I am doing in my free time. If you have any cons
 how many cyclists -- could use citibike data as a proxy  
 Analyze cyclist accidents better: conduct time-series analysis with seasonality, ARIMA, etc.  
 Update map -- add bike network (by year) and change accidents to by year grouping 
-conclude with hypothesis of whether L train shutdown has increased accidents   
-Change drag behavior when plotly is updated to 1.43
+Change drag behavior (for mobile) when [**plotly**](https://github.com/ropensci/plotly) is updated to 1.43
 
 ```{r}
 # test <- NYPD %>%
