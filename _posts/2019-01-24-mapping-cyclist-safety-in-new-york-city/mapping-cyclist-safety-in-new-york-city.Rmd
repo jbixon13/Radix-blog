@@ -65,7 +65,7 @@ transit <- transit %>%
   group_by(Period) 
 ```
 
-```{r echo=FALSE, message=FALSE, out.width='80%'}
+```{r echo=FALSE, message=FALSE, out.width='100%'}
 # plot ridership 
 plt.NYC.riders <- transit %>% 
   dplyr::filter(`Indicator Name` == 'Total Ridership - Subways') %>%
@@ -200,7 +200,7 @@ bike_network_trans <- bike_network_trans %>%
 labs <- as.list(bike_network_trans$labs)
 ```
 
-```{r echo=FALSE, warning=FALSE, layout='l-screen-inset', fig.height=5.5}
+```{r echo=FALSE, warning=FALSE, layout='l-screen-inset', fig.height=5}
 # preferCanvas to improve performance with high volume of markers
 map <- leaflet(data = NYPD, options = leafletOptions(minZoom = 11, maxZoom = 18, preferCanvas = TRUE)) %>%
 
