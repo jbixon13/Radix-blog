@@ -73,13 +73,14 @@ plt.NYC.riders <- transit %>%
   geom_point(color = 'steelblue4', alpha = .7) + 
   geom_smooth(method = 'lm') + 
   ylab('Total Monthly Ridership - All Lines') +
+  ggtitle('Monthly ridership for the entire network has increased.') +
   scale_y_continuous(labels = comma) +
   theme_classic()
 
 # convert to plotly object
 ggplotly(plt.NYC.riders) %>% 
-  layout(title = 'Monthly ridership for the entire network has increased.',
-  titlefont = list(size = 17)) %>%
+  #layout(title = 'Monthly ridership for the entire network has increased.',
+  #titlefont = list(size = 17)) %>%
   config(displayModeBar = FALSE)
 ```
 
@@ -277,10 +278,12 @@ summary(arima1)
 
 ### Planned Updates/ notes:    
 
+This is an ongoing project that I am doing in my free time. If you have any constructive criticism please feel free to reach out, especially with suggestions about spatial regression methodology.  
+
 how many cyclists -- could use citibike data as a proxy  
 Analyze cyclist accidents better: conduct time-series analysis with seasonality, ARIMA, etc.  
 Update map -- add bike network (by year) and change accidents to by year grouping 
-conclude with hypothesis of whether L train shutdown has increased accidents 
+conclude with hypothesis of whether L train shutdown has increased accidents   
 Change drag behavior when plotly is updated to 1.43
 
 ```{r}
