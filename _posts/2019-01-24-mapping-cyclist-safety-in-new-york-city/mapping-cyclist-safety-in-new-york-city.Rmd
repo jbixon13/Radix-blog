@@ -175,7 +175,7 @@ plt.sub <- sub %>%
 
 # convert to plotly object
 ggplotly(plt.sub) %>% 
-  layout(title = 'Cyclist injuries due to vehicle collisions increasing.',
+  layout(title = 'Cyclist injuries due to vehicle collisions are increasing.',
   titlefont = list(size = 16)) %>%
   config(displayModeBar = FALSE)
 ```
@@ -276,14 +276,26 @@ summary(arima1)
 ```
 ***
 
-### Planned Updates/ notes:    
+### Planned Updates / Notes:    
 
 This is an ongoing project that I am doing in my free time. If you have any constructive criticism please feel free to reach out, especially with suggestions about spatial regression methodology.  
 
-* how many cyclists -- could use citibike data as a proxy  
-* Analyze cyclist accidents better: conduct time-series analysis with seasonality, ARIMA, etc.   
-* Update map -- add bike network (by year) and change accidents to by year grouping  
-* Change drag behavior (for mobile) when [**plotly**](https://github.com/ropensci/plotly) is updated to 1.43
+* Methodology
+    + Need a way to do geospatial predictive modeling with a dataset that only has 1s, no 0s
+    + How to understand relationship between accidents when we only have accident data, not non-accidents
+    + Consider using Citibike data as a proxy to cyclist population, but do they behave differently?
+    + Look into spatial prediction methods (spatial autocorrelation, spatial regression, etc.)
+    + What trends are there in types of bike paths being constructed over time?
+* Time-Series
+    + More rigorous analysis of cyclist injuries
+    + Use ARIMA model to remove seasonality, conclude whether injuries are increasing
+    + Are injuries increasing because more people are biking or something else?    
+* Geospatial
+    + Consider changing map to chloropleths (and use accidents per capita)
+    + Find a way to visualize changes over time, whether through leaflet or gganimate or otherwise
+    + Need function that can calculate a point's (accident) nearest polyline (bike path) and return features (type of path)  
+* Visualizations
+    + Change drag behavior (for mobile) when [**plotly**](https://github.com/ropensci/plotly) is updated to 1.43
 
 ```{r}
 # test <- NYPD %>%
