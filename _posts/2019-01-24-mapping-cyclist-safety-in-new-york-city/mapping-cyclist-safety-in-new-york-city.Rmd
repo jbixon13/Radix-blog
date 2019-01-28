@@ -9,7 +9,7 @@ author:
     url: https://jbixon13.wixsite.com/website
     affiliation: Merkle Inc.
     affiliation_url: https://merkleinc.com
-date: 01-24-2019
+date: 01-28-2019
 repository_url: https://github.com/jbixon13/Radix-blog
 output:
   radix::radix_article:
