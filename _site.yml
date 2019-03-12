@@ -4,7 +4,7 @@ description: |
   Blog | Jason Bixon
 output_dir: "_site"
 base_url: https://jasonbixon.netlify.com
-favicon: images/favicon.png
+favicon: images/favicon2.png
 navbar:
   logo: images/brain.png
   right:
