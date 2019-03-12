@@ -308,3 +308,39 @@ This is an ongoing project that I am doing in my free time. If you have any cons
 # dist <- st_is_within_distance(test_trans, bike_network_trans, dist = 100)
 ```
 
+```{r}
+library(nycgeo)
+
+# get Neighborhood Tabulation Area boundaries for NYC
+nyc_poly <- nyc_boundaries(geography = "nta") %>% 
+  st_transform(4326)
+
+# prep crash data for spatial operations
+NYPD_sum <- NYPD %>% 
+  filter(LATITUDE != is.na(TRUE)) %>% 
+  filter(`NUMBER OF CYCLIST INJURED` > 0) %>% 
+  st_as_sf(coords = c('LONGITUDE', 'LATITUDE'), crs = 4326) 
+
+# identify which accidents (points) intersect with NTAs (polygons) 
+# think it's giving me the indexes of accidents for each nta, need to figure out how to get date info from index  
+#lengths(st_intersects(nyc_poly, tst))
+
+# try reversing the process: instead of count of intersections for each polygon, do st_intersects for each point so that each point is assigned a polygon it intersects with, then group_by day and polygon 
+#head(st_intersects(tst, nyc_poly))
+NYPD_sum <- NYPD_sum %>% 
+  mutate(nta = as.numeric(st_intersects(NYPD_sum, nyc_poly))) %>% 
+  mutate(month = floor_date(DATE, unit = 'month')) %>% 
+  group_by(nta, month) %>% 
+  summarize(accident_count = n())
+
+# have summary by nta and month, but geometry is list of points, not polygon for nta. Need to join nta geom to summary and use in ggplot with animate
+
+ggplot(nyc_poly) +
+  geom_sf() +
+  # will need to do some sort of color fill by count - look into virandis 
+  theme_void() +
+  theme(panel.grid = element_line(color = "transparent")) + 
+  # animate by month, identify current month in title
+  labs(title = 'Month: {frame_time}') +
+  gganimate::transition_time(month)
+```

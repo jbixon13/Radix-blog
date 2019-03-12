@@ -4,13 +4,16 @@ description: |
   Blog | Jason Bixon
 output_dir: "_site"
 base_url: https://jasonbixon.netlify.com
+favicon: images/favicon
 navbar:
   logo: images/brain.png
   right:
     - text: "Home"
       href: index.html
-    - text: "About"
+    - text: "About Me"
       href: about.html
     - text: "My Website"
       href: "https://jbixon13.wixsite.com/website"
+    - text: "Portfolio"
+      href: portfolio.html
 output: radix::radix_article
