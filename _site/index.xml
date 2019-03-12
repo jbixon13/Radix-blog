@@ -6,7 +6,12 @@
     <atom:link href="https://jasonbixon.netlify.com/index.xml" rel="self" type="application/rss+xml"/>
     <description>Blog | Jason Bixon
 </description>
-    <generator>Radix</generator>
+    <image>
+      <title>Jason Bixon</title>
+      <url>https://jasonbixon.netlify.com/images/favicon.png</url>
+      <link>https://jasonbixon.netlify.com</link>
+    </image>
+    <generator>Distill</generator>
     <lastBuildDate>Mon, 28 Jan 2019 00:00:00 +0000</lastBuildDate>
     <item>
       <title>Mapping Cyclist Safety in New York City</title>

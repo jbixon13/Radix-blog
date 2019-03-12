@@ -1,0 +1,28 @@
+---
+title: "Contact"
+description: |
+  How to get in touch
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+![](images/gmail_icon.png){ width=15% }  
+
+## [Email](mailto:jbixon13@gmail.com)  
+
+
+![](images/linkedin_icon.png){ width=15% }  
+
+## [LinkedIn](https://www.linkedin.com/in/jasonbixon)  
+
+
+![](images/github_icon.png){ width=15% }  
+
+## [Github](https://github.com/jbixon13)      
+
+
+![](images/kaggle_icon.png){ width=15% }  
+
+## [Kaggle](https://www.kaggle.com/jbixon13/)
