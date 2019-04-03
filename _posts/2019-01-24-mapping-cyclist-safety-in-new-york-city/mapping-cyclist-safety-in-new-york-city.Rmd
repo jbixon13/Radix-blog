@@ -3,10 +3,10 @@ title: "Mapping Cyclist Safety in New York City"
 description: |
   Is there a relationship between bike path access and cyclist injuries? 
 preview: preview.jpg
-base_url: https://jasonbixon.netlify.com
+base_url: https://jasonbixonblog.netlify.com
 author:
   - name: Jason Bixon
-    url: https://jbixon13.wixsite.com/website
+    url: https://jasonbixon.netlify.com
     affiliation: Merkle Inc.
     affiliation_url: https://merkleinc.com
 date: 01-28-2019

@@ -3,10 +3,10 @@ title: "New Year, New (First) Blog"
 description: |
   Trying my best.
 preview: preview.jpg
-base_url: https://jasonbixon.netlify.com
+base_url: https://jasonbixonblog.netlify.com
 author:
   - name: Jason Bixon
-    url: https://jbixon13.wixsite.com/website
+    url: https://jasonbixon.netlify.com
     affiliation: Merkle Inc.
     affiliation_url: https://merkleinc.com
 date: 01-24-2019
