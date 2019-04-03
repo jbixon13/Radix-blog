@@ -32,4 +32,4 @@ I developed research experience as a Principal Investigator in the [**Pro-Enviro
 
 <br> 
 
-This blog is built through the [**Distill**](https://rstudio.github.io/radix) framework for scientific and technical publishing. It doesn't give me all the fancy animations and options other platforms allow, but it allows the most flexibility for sharing interactive visualizations. [My Wix website](https://jbixon13.wixsite.com/website) will remain up for now until I can learn some more markdown tricks for website formatting. 
+This blog is built through the [**Distill**](https://rstudio.github.io/radix) framework for scientific and technical publishing. It doesn't give me all the fancy animations and options other platforms allow, but it allows the most flexibility for sharing interactive visualizations and analyses. I use a [**seperate website**](http://jasonbixon.netlify.com) to host a portfolio of my work. 

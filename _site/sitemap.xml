@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
-    <loc>https://jasonbixon.netlify.com/about.html</loc>
-    <lastmod>2019-03-12T02:17:56-04:00</lastmod>
+    <loc>https://jasonbixonblog.netlify.com/about.html</loc>
+    <lastmod>2019-04-02T21:03:17-04:00</lastmod>
   </url>
   <url>
-    <loc>https://jasonbixon.netlify.com/contact.html</loc>
-    <lastmod>2019-03-12T01:36:28-04:00</lastmod>
+    <loc>https://jasonbixonblog.netlify.com/contact.html</loc>
+    <lastmod>2019-04-02T20:54:53-04:00</lastmod>
   </url>
   <url>
-    <loc>https://jasonbixon.netlify.com/</loc>
+    <loc>https://jasonbixonblog.netlify.com/</loc>
     <lastmod>2019-03-11T22:04:55-04:00</lastmod>
   </url>
   <url>
-    <loc>https://jasonbixon.netlify.com/portfolio.html</loc>
+    <loc>https://jasonbixonblog.netlify.com/portfolio.html</loc>
     <lastmod>2019-03-12T01:33:49-04:00</lastmod>
   </url>
   <url>
-    <loc>https://jasonbixon.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/</loc>
+    <loc>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/</loc>
     <lastmod>2019-01-28T01:18:59-05:00</lastmod>
   </url>
   <url>
-    <loc>https://jasonbixon.netlify.com/posts/2019-01-24-new-year-new-first-blog/</loc>
+    <loc>https://jasonbixonblog.netlify.com/posts/2019-01-24-new-year-new-first-blog/</loc>
     <lastmod>2019-01-24T21:08:39-05:00</lastmod>
   </url>
 </urlset>
