@@ -48,11 +48,6 @@ I was inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12
   
 [**NYC DOT**](http://web.mta.info/sandy/CanarsieTunnelRebuildingProcess.html#sdtr) has predicted about 2% of L Line riders to switch to cycling, while about 79% are predicted to move to other subway lines. I could investigate the dispersion of L Train riders to other options as a whole if data is available, but for now I will focus on cyclist safety as it's more approachable with currently available data.    
 
-***  
-### Let's start by looking at some performance metrics for the MTA subway network as a whole.   
-Some of the performance metric definitions are opaque, so I'll [**specify where necessary.**](http://dashboard.mta.info/)  
-
-
 ### Now let's look at some two-wheeled data.   
 
 ```{r echo=FALSE}
