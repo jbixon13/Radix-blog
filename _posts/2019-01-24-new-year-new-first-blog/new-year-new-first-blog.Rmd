@@ -11,7 +11,7 @@ author:
     affiliation_url: https://merkleinc.com
 date: 01-24-2019
 output:
-  radix::radix_article:
+  distill::distill_article:
     self_contained: false
 ---
 
