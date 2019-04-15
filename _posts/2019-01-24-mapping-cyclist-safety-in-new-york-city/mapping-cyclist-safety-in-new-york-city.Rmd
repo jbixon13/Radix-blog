@@ -33,13 +33,14 @@ library(rgdal)
 library(sp)
 library(sf)
 library(htmltools)
+library(gifski)
 ```
 
 ```{r message=FALSE, echo=FALSE}
 # read in datasets 
 #MTA_bt <- read_csv('../input/nys-metropolitan-transport-authority-mta-data/hourly-traffic-on-metropolitan-transportation-authority-mta-bridges-and-tunnels-beginning-2010.csv') # MTA bridges & tunnels data
 #MTA_fares <- read_csv('../input/nys-metropolitan-transport-authority-mta-data/fare-card-history-for-metropolitan-transportation-authority-mta-beginning-2010.csv')              # MTA subway fare data  
-MTA_KPI <- read_csv('data/metropolitan-transportation-authority-mta-performance-indicators-per-agency-beginning-2008.csv')    # MTA KPI performance data 
+#MTA_KPI <- read_csv('data/metropolitan-transportation-authority-mta-performance-indicators-per-agency-beginning-2008.csv')    # MTA KPI performance data 
 NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE = col_character()))                                          # NYPD collision data 
 ```
 
@@ -51,98 +52,7 @@ I was inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12
 ### Let's start by looking at some performance metrics for the MTA subway network as a whole.   
 Some of the performance metric definitions are opaque, so I'll [**specify where necessary.**](http://dashboard.mta.info/)  
 
-```{r echo=FALSE}
-# convert Period to date variable
-transit <- MTA_KPI
 
-transit$Period <- paste(transit$Period, '-01', sep = '')
-
-transit$Period <- transit$Period %>%
-  ymd()
-
- # filter observations to only NYC Transit (Subway and Bus)
-transit <- transit %>% 
-  dplyr::filter(MTA_KPI$`Agency Name` == 'NYC Transit') %>%
-  group_by(Period) 
-```
-
-```{r echo=FALSE, message=FALSE, out.width='100%'}
-# plot ridership 
-plt.NYC.riders <- transit %>% 
-  dplyr::filter(`Indicator Name` == 'Total Ridership - Subways') %>%
-  ggplot(aes(x = Period, y = `Monthly Actual`)) + 
-  geom_point(color = 'steelblue4', alpha = .7) + 
-  geom_smooth(method = 'lm') + 
-  ylab('Total Monthly Ridership - All Lines') +
-  scale_y_continuous(labels = comma) +
-  theme_classic()
-
-# convert to plotly object
-ggplotly(plt.NYC.riders) %>% 
-  layout(title = 'Monthly ridership for the entire network has increased.',
-  titlefont = list(size = 16)) %>%
-  config(displayModeBar = FALSE)
-```
-
-Terminal On-Time Performance measures the percentage of trains arriving at their destination terminals as scheduled. A train is counted as on-time if it arrives at its destination early, on time, or no more than five minutes late, and has not skipped any planned stops. TOTP is a legacy metric that provides a measure of trains arriving within the standard, and not a direct measure of customer travel time, particularly since relatively few customers travel all the way to the end of a line.
-
-```{r echo=FALSE, message=FALSE, out.width='100%'}
-# plot On-Time Performance for all subway lines
-plt.NYC.OTP <- transit %>% 
-  dplyr::filter(`Indicator Name` == 'On-Time Performance (Terminal)') %>%
-  ggplot(aes(x = Period, y = `Monthly Actual`)) + 
-  geom_point(color = 'steelblue4', alpha = .7) + 
-  geom_smooth(method = 'lm') + 
-  ylab('Monthly On-Time Performance - All Lines') +
-  theme_classic()
-
-# convert to plotly object
-ggplotly(plt.NYC.OTP) %>% 
-  layout(title = 'Subway cars arriving at their destination on schedule less.', 
-  titlefont = list(size = 15)) %>%
-  config(displayModeBar = FALSE)
-```
-
-Wait Assessment measures how regularly the trains are spaced during peak hours. To meet the standard, the headway (time between trains) can be no greater than 25% more than the scheduled headway. This provides a percentage of trains passing the standard, but does not account for extra service operated, is not weighted to how many customers are waiting for the trains at different stations, does not distinguish between relatively minor gaps in service and major delays, and is not a true measurement of time customers spend waiting on the platform.
-
-```{r echo=FALSE, message=FALSE, out.width='100%'}
-# plot subway wait assessment for all subway lines
-plt.NYC.SWA <- transit %>% 
-  dplyr::filter(`Indicator Name` == 'Subway Wait Assessment') %>%
-  ggplot(aes(x = Period, y = `Monthly Actual`)) + 
-  geom_point(color = 'steelblue4', alpha = .7) + 
-  geom_smooth(method = 'lm') +
-  ylab('Subway Wait Assessment - All Lines') +
-  theme_classic()
-
-# convert to plotly object
-ggplotly(plt.NYC.SWA) %>% 
-  layout(title = 'Subway cars less routinely spaced during peak hours.',
-  titlefont = list(size = 16)) %>%
-  config(displayModeBar = FALSE) 
-```
-
-Mean Distance Between Failures (MDBF) reports how frequently car-related problems such as door failures, loss of motor power, or brake issues cause a delay of over five minutes. It is calculated by dividing the number of miles train cars run in service by the number of incidents due to car‐related problems.
-
-```{r echo=FALSE, message=FALSE, out.width='100%'}
-# plot mean distance between failures for all subway lines 
-plt.NYC.fail <- transit %>% 
-  dplyr::filter(`Indicator Name` == 'Mean Distance Between Failures - Subways') %>%
-  ggplot(aes(x = Period, y = `Monthly Actual`)) + 
-  geom_point(color = 'steelblue4', alpha = .7) + 
-  geom_smooth(method = 'lm') +
-  ylab('Mean Distance Between Failures (Miles)') +
-  scale_y_continuous(labels = comma) +
-  theme_classic()
-
-# convert to plotly object
-ggplotly(plt.NYC.fail) %>% 
-  layout(title = 'Subway cars are breaking down more frequently.',
-  titlefont = list(size = 16)) %>% 
-  config(displayModeBar = FALSE)
-```
-
-***
 ### Now let's look at some two-wheeled data.   
 
 ```{r echo=FALSE}
@@ -309,38 +219,38 @@ This is an ongoing project that I am doing in my free time. If you have any cons
 ```
 
 ```{r}
-library(nycgeo)
-
-# get Neighborhood Tabulation Area boundaries for NYC
-nyc_poly <- nyc_boundaries(geography = "nta") %>% 
-  st_transform(4326)
-
-# prep crash data for spatial operations
-NYPD_sum <- NYPD %>% 
-  filter(LATITUDE != is.na(TRUE)) %>% 
-  filter(`NUMBER OF CYCLIST INJURED` > 0) %>% 
-  st_as_sf(coords = c('LONGITUDE', 'LATITUDE'), crs = 4326) 
-
-# identify which accidents (points) intersect with NTAs (polygons) 
-# think it's giving me the indexes of accidents for each nta, need to figure out how to get date info from index  
-#lengths(st_intersects(nyc_poly, tst))
-
-# try reversing the process: instead of count of intersections for each polygon, do st_intersects for each point so that each point is assigned a polygon it intersects with, then group_by day and polygon 
-#head(st_intersects(tst, nyc_poly))
-NYPD_sum <- NYPD_sum %>% 
-  mutate(nta = as.numeric(st_intersects(NYPD_sum, nyc_poly))) %>% 
-  mutate(month = floor_date(DATE, unit = 'month')) %>% 
-  group_by(nta, month) %>% 
-  summarize(accident_count = n())
-
-# have summary by nta and month, but geometry is list of points, not polygon for nta. Need to join nta geom to summary and use in ggplot with animate
-
-ggplot(nyc_poly) +
-  geom_sf() +
-  # will need to do some sort of color fill by count - look into virandis 
-  theme_void() +
-  theme(panel.grid = element_line(color = "transparent")) + 
-  # animate by month, identify current month in title
-  labs(title = 'Month: {frame_time}') +
-  gganimate::transition_time(month)
+# library(nycgeo)
+# 
+# # get Neighborhood Tabulation Area boundaries for NYC
+# nyc_poly <- nyc_boundaries(geography = "nta") %>% 
+#   st_transform(4326)
+# 
+# # prep crash data for spatial operations
+# NYPD_sum <- NYPD %>% 
+#   filter(LATITUDE != is.na(TRUE)) %>% 
+#   filter(`NUMBER OF CYCLIST INJURED` > 0) %>% 
+#   st_as_sf(coords = c('LONGITUDE', 'LATITUDE'), crs = 4326) 
+# 
+# # identify which accidents (points) intersect with NTAs (polygons) 
+# # think it's giving me the indexes of accidents for each nta, need to figure out how to get date info from index  
+# #lengths(st_intersects(nyc_poly, tst))
+# 
+# # try reversing the process: instead of count of intersections for each polygon, do st_intersects for each point so that each point is assigned a polygon it intersects with, then group_by day and polygon 
+# #head(st_intersects(tst, nyc_poly))
+# NYPD_sum <- NYPD_sum %>% 
+#   mutate(nta = as.numeric(st_intersects(NYPD_sum, nyc_poly))) %>% 
+#   mutate(month = floor_date(DATE, unit = 'month')) %>% 
+#   group_by(nta, month) %>% 
+#   summarize(accident_count = n())
+# 
+# # have summary by nta and month, but geometry is list of points, not polygon for nta. Need to join nta geom to summary and use in ggplot with animate
+# 
+# ggplot(nyc_poly) +
+#   geom_sf() +
+#   # will need to do some sort of color fill by count - look into virandis 
+#   theme_void() +
+#   theme(panel.grid = element_line(color = "transparent")) + 
+#   # animate by month, identify current month in title
+#   labs(title = 'Month: {frame_time}') +
+#   gganimate::transition_time(month)
 ```

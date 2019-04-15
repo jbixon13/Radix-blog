@@ -11,8 +11,17 @@
       <url>https://jasonbixonblog.netlify.com/images/favicon2.png</url>
       <link>https://jasonbixonblog.netlify.com</link>
     </image>
-    <generator>Distill</generator>
-    <lastBuildDate>Tue, 02 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Radix</generator>
+    <lastBuildDate>Sun, 14 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>MTA Shutdown</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixonblog.netlify.com/posts/2019-04-14-mta-shutdown</link>
+      <description>Is the NYC subway system as dire as we say it is?</description>
+      <guid>https://jasonbixonblog.netlify.com/posts/2019-04-14-mta-shutdown</guid>
+      <pubDate>Sun, 14 Apr 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-04-14-mta-shutdown/preview.gif" medium="image" type="image/gif"/>
+    </item>
     <item>
       <title>Shiny is a Godsend</title>
       <dc:creator>Jason Bixon</dc:creator>
