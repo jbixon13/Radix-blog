@@ -1,5 +1,5 @@
 ---
-title: "Shiny is a Godsend"
+title: "Shiny is Cool as Hell"
 description: |
   A suprisingly intuitive tool for data democratization.
 preview: preview.jpg
