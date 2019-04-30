@@ -33,15 +33,15 @@ library(rgdal)
 library(sp)
 library(sf)
 library(htmltools)
+library(nycgeo)
+library(gganimate)
 library(gifski)
 ```
 
-```{r message=FALSE, echo=FALSE}
+```{r data_read, message=FALSE, echo=FALSE}
 # read in datasets 
-#MTA_bt <- read_csv('../input/nys-metropolitan-transport-authority-mta-data/hourly-traffic-on-metropolitan-transportation-authority-mta-bridges-and-tunnels-beginning-2010.csv') # MTA bridges & tunnels data
-#MTA_fares <- read_csv('../input/nys-metropolitan-transport-authority-mta-data/fare-card-history-for-metropolitan-transportation-authority-mta-beginning-2010.csv')              # MTA subway fare data  
-#MTA_KPI <- read_csv('data/metropolitan-transportation-authority-mta-performance-indicators-per-agency-beginning-2008.csv')    # MTA KPI performance data 
-NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE = col_character()))                                          # NYPD collision data 
+NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE = col_character())) # NYPD collision data 
+population <- read_csv('data/New_York_City_Population_By_Neighborhood_Tabulation_Areas.csv') # US census of population by NTA 
 ```
 
 I was inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12/new-york-city-electric-bikes-transit-crisis-de-blasio/577969/) article detailing the impending transportation crisis due to the MTA L Line shutdown. Specifically, I am interested in observing whether the shutdown contributes to an increase in cyclist injuries due to motor vehicle collisions as about [**275,000 L Line riders**](https://ny.curbed.com/2018/10/3/17925038/nyc-subway-l-train-shutdown-mitigation-alternatives) seek alternatives.  
@@ -50,7 +50,7 @@ I was inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12
 
 ### Now let's look at some two-wheeled data.   
 
-```{r echo=FALSE}
+```{r date_manipulation, echo=FALSE}
 # convert date to a date variable
 NYPD$DATE <- NYPD$DATE %>% 
   substr(start = 1, stop = 10) %>% 
@@ -68,7 +68,7 @@ sub <- sub %>%
 
 ```
 
-```{r echo=FALSE, message=FALSE, out.width='100%'}
+```{r injuries_plotly, echo=FALSE, message=FALSE, out.width='100%'}
 # plot cyclist injuries per week 
 plt.sub <- sub %>% 
   ggplot(aes(x = week, y = cyclist_injuries)) +
@@ -80,14 +80,18 @@ plt.sub <- sub %>%
 
 # convert to plotly object
 ggplotly(plt.sub) %>% 
-  layout(title = 'Cyclist injuries due to vehicle collisions are increasing.',
-  titlefont = list(size = 16)) %>%
-  config(displayModeBar = FALSE)
+  layout(title = list(text = 'Cyclist injuries due to vehicle collisions are increasing.',
+                      font = list(
+                        size = 16
+                        )
+                      )
+         ) %>% 
+  config(displayModeBar = FALSE, scrollZoom = FALSE)
 ```
 
 ### And now a map of cyclist injuries and deaths over the last few years.   
 
-```{r echo=FALSE, message=FALSE, results='hide'}
+```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
 # read in shapefile
 bike_network <- readOGR(dsn = 'data/20180906_current_bike_network', layer = '20180906_current_bike_network')
 
@@ -106,7 +110,7 @@ bike_network_trans <- bike_network_trans %>%
 labs <- as.list(bike_network_trans$labs)
 ```
 
-```{r echo=FALSE, warning=FALSE, layout='l-screen-inset', fig.height=5}
+```{r leaflet, echo=FALSE, warning=FALSE, layout='l-screen-inset', fig.height=5}
 # preferCanvas to improve performance with high volume of markers
 map <- leaflet(data = NYPD, options = leafletOptions(minZoom = 11, maxZoom = 18, preferCanvas = TRUE)) %>%
 
@@ -168,17 +172,144 @@ map <- leaflet(data = NYPD, options = leafletOptions(minZoom = 11, maxZoom = 18,
 map
 ```
 
-```{r}
+```{r time-series}
 # convert weekly crash data to a time-series object
-ts_injuries <- ts(sub$cyclist_injuries, frequency = 52)
+#ts_injuries <- ts(sub$cyclist_injuries, frequency = 52)
 # plot autocorrelation function
-acf(ts_injuries)
+#acf(ts_injuries)
 ```
 
-```{r}
-arima1 <- auto.arima(ts_injuries, stepwise = FALSE, trace = FALSE)
-summary(arima1)
+```{r arima, echo=FALSE}
+#arima1 <- auto.arima(ts_injuries, stepwise = FALSE, trace = FALSE)
+#summary(arima1)
 ```
+
+```{r bikepath_processing, echo=FALSE}
+# test <- NYPD %>%
+#   filter(LATITUDE != is.na(TRUE)) %>% 
+#   st_as_sf(coords = c('LATITUDE', 'LONGITUDE')) 
+#   
+# test_trans <- test %>% 
+#   st_transform(crs = 4326)
+# 
+# dist <- st_is_within_distance(test_trans, bike_network_trans, dist = 100)
+```
+
+```{r lookup_table, echo=FALSE}
+ 
+year <- rep(2012:2018)
+nta <- rep(1:195)
+
+# create lookup table with patterns for key creation (every NTA repeated for every year)
+lookup <- data.frame(nta = rep(1:195, times = 7), year = rep(year, each = 195)) %>% 
+  mutate(key = paste0(nta, '-', year)) %>% 
+  dplyr::arrange(nta, year)
+```
+
+```{r population_processing, echo=FALSE}
+# prep population dataset for joining to nyc_poly
+population <- population %>% 
+  filter(Year == 2010) %>% 
+  select(`NTA Code`, Population) %>% 
+  rename(nta_id = `NTA Code`)
+```
+
+```{r point_aggregation_and_joining, echo=FALSE}
+# get Neighborhood Tabulation Area boundaries and join to population by NTA
+nyc_poly <- nyc_boundaries(geography = "nta") %>%
+  st_transform(4326) %>% 
+  mutate(nta = rep(1:195)) %>% 
+  left_join(population, by = 'nta_id')
+
+# prep accident data for spatial operations (keep only geotagged & cyclist accidents)
+NYPD_sum <- NYPD %>%
+  filter(LATITUDE != is.na(TRUE)) %>%
+  filter(`NUMBER OF CYCLIST INJURED` > 0) %>%
+  st_as_sf(coords = c('LONGITUDE', 'LATITUDE'), crs = 4326)
+
+# identify which accidents (points) intersect with NTAs (polygons)
+# think it's giving me the indexes of accidents for each nta, need to figure out how to get date info from index
+#lengths(st_intersects(nyc_poly, tst))
+
+# try reversing the process: instead of count of intersections for each polygon, do st_intersects for each point so that each point is assigned a polygon it intersects with, then group_by day and polygon
+#head(st_intersects(tst, nyc_poly))
+
+NYPD_sum <- NYPD_sum %>%
+  mutate(nta = as.numeric(st_intersects(NYPD_sum, nyc_poly))) %>%
+  # floor accidents by year and clean dates for further joins and processing
+  mutate(year = substr(floor_date(DATE, unit = 'year'), start = 1, stop = 4)) %>%
+  group_by(nta, year) %>%
+  # get count of accidents per year and NTA 
+  summarize(accident_count = n()) %>% 
+  mutate(key = paste0(nta, '-', year))
+
+# join accident counts to lookup table (to solve problem of rows with 0 accidents being dropped)
+join <- lookup %>% 
+  left_join(NYPD_sum, by = 'key') %>% 
+  arrange(nta.x, year.x) %>% 
+  mutate(accident_count = if_else(is.na(accident_count), 0, as.double(accident_count))) %>% 
+  select(-nta.y, -year.y) %>% 
+  rename(nta = nta.x) %>% 
+  rename(year = year.x)
+
+# have summary by nta and month, but geometry is list of points, not polygon of nta. Need to replace with polygon for map visualization
+join_poly <- join %>% 
+  inner_join(as.data.frame(nyc_poly), by = 'nta') %>% 
+  as.data.frame() %>% 
+  select(-geometry.x) %>% 
+  rename(geometry = geometry.y) %>% 
+  # calculate accidents per capita from accidents and population per NTA 
+  mutate(accidents_per_capita = accident_count / Population) %>% 
+  # orders of magnitude difference, try square root transform
+  mutate(accidents_per_capita_sqrt = sqrt(accidents_per_capita)) %>%
+  # remove unnecesary variables, reorder remaining vars
+  select(-state_fips, -county_fips, -county_name, -borough_id, -puma_id, -puma_name) %>% 
+  select(nta, year, key, nta_id, nta_name, borough_name, accident_count,
+         Population, accidents_per_capita, accidents_per_capita_sqrt, geometry) %>% 
+  st_as_sf()
+```
+
+```{r animated_map, echo=FALSE, layout='l-screen-inset'}
+# create chloropleth map with accidents per capita fill, change graphics options for 1080p export
+map_base <- ggplot(join_poly) +
+  geom_sf(aes(fill = accidents_per_capita_sqrt)) +
+  scale_fill_viridis_c() +
+  theme_void() +
+  theme(plot.title = element_text(size = 30)) +
+  theme(plot.subtitle = element_text(size = 22)) +
+  theme(legend.key.size = unit(1, 'in')) + 
+  theme(legend.title = element_text(size = 24)) + 
+  theme(legend.text = element_text(size = 20)) +
+  theme(panel.grid = element_line(color = "transparent")) 
+
+#map_base
+
+# animate by year, identify current year in title
+anim <- map_base +
+  labs(title = 'Cyclist injuries per capita per year in NYC', subtitle = 'Year: {closest_state}') +
+  transition_states(year)
+
+#anim
+
+anim <- animate(anim, width = 1920, height = 1080)
+anim
+#anim_save(filename = anim.gif)
+```
+
+```{r notes}
+#introduction - need to redo
+# trend scatter plot - done, maybe look into time-series analysis
+# gif of NTAs - have accident counts, change to accidents/NTA population (and acknowledge issues with using 2010 survey data but it's better than a simple population map)
+# bar plot of accident causes - not done
+# leaflet - done, consider any simplifications but likely done
+# model predicting bike path/path type - not done 
+# aadt traffic / volume measurements of traffic 
+# look at how cities measure volume or traffic for cars and emulate for bikes
+# strava geolocation for bike data ??
+# conclusions - not done
+# seperate post about point aggregation in chloropleths - not until all else done 
+```
+
 ***
 
 ### Planned Updates / Notes:    
@@ -199,53 +330,3 @@ This is an ongoing project that I am doing in my free time. If you have any cons
     + Consider changing map to chloropleths (and use accidents per capita)
     + Find a way to visualize changes over time, whether through leaflet or gganimate or otherwise
     + Need function that can calculate a point's (accident) nearest polyline (bike path) and return features (type of path)  
-* Visualizations
-    + Change drag behavior (for mobile) when [**plotly**](https://github.com/ropensci/plotly) is updated to 1.43
-
-```{r}
-# test <- NYPD %>%
-#   filter(LATITUDE != is.na(TRUE)) %>% 
-#   st_as_sf(coords = c('LATITUDE', 'LONGITUDE')) 
-#   
-# test_trans <- test %>% 
-#   st_transform(crs = 4326)
-# 
-# dist <- st_is_within_distance(test_trans, bike_network_trans, dist = 100)
-```
-
-```{r}
-# library(nycgeo)
-# 
-# # get Neighborhood Tabulation Area boundaries for NYC
-# nyc_poly <- nyc_boundaries(geography = "nta") %>% 
-#   st_transform(4326)
-# 
-# # prep crash data for spatial operations
-# NYPD_sum <- NYPD %>% 
-#   filter(LATITUDE != is.na(TRUE)) %>% 
-#   filter(`NUMBER OF CYCLIST INJURED` > 0) %>% 
-#   st_as_sf(coords = c('LONGITUDE', 'LATITUDE'), crs = 4326) 
-# 
-# # identify which accidents (points) intersect with NTAs (polygons) 
-# # think it's giving me the indexes of accidents for each nta, need to figure out how to get date info from index  
-# #lengths(st_intersects(nyc_poly, tst))
-# 
-# # try reversing the process: instead of count of intersections for each polygon, do st_intersects for each point so that each point is assigned a polygon it intersects with, then group_by day and polygon 
-# #head(st_intersects(tst, nyc_poly))
-# NYPD_sum <- NYPD_sum %>% 
-#   mutate(nta = as.numeric(st_intersects(NYPD_sum, nyc_poly))) %>% 
-#   mutate(month = floor_date(DATE, unit = 'month')) %>% 
-#   group_by(nta, month) %>% 
-#   summarize(accident_count = n())
-# 
-# # have summary by nta and month, but geometry is list of points, not polygon for nta. Need to join nta geom to summary and use in ggplot with animate
-# 
-# ggplot(nyc_poly) +
-#   geom_sf() +
-#   # will need to do some sort of color fill by count - look into virandis 
-#   theme_void() +
-#   theme(panel.grid = element_line(color = "transparent")) + 
-#   # animate by month, identify current month in title
-#   labs(title = 'Month: {frame_time}') +
-#   gganimate::transition_time(month)
-```
