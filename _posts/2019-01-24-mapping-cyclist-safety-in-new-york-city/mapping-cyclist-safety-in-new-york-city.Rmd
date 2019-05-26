@@ -44,9 +44,12 @@ NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE
 population <- read_csv('data/New_York_City_Population_By_Neighborhood_Tabulation_Areas.csv') # US census of population by NTA 
 ```
 
-I was inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12/new-york-city-electric-bikes-transit-crisis-de-blasio/577969/) article detailing the impending transportation crisis due to the MTA L Line shutdown. Specifically, I am interested in observing whether the shutdown contributes to an increase in cyclist injuries due to motor vehicle collisions as about [**275,000 L Line riders**](https://ny.curbed.com/2018/10/3/17925038/nyc-subway-l-train-shutdown-mitigation-alternatives) seek alternatives.  
+I was originally inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12/new-york-city-electric-bikes-transit-crisis-de-blasio/577969/) article detailing the then-impending transportation crisis due to the L Line shutdown. Specifically, I was interested in observing whether the shutdown contributed to an increase in cyclist injuries due to motor vehicle collisions as about [**275,000 L Line riders**](https://ny.curbed.com/2018/10/3/17925038/nyc-subway-l-train-shutdown-mitigation-alternatives) would have sought alternatives. The MTA averted the shutdown at the 11th hour, leading me to a new research question. 
+
+NYC has seen an [**exponential increase**](http://www.nyc.gov/html/dot/downloads/pdf/cycling-in-the-city.pdf) in bicycle usage in the last 20 years. It reports [**up to 76% fewer**](https://www1.nyc.gov/html/dot/downloads/pdf/nyc-cycling-risk.pdf) injuries or deaths per 10 million miles biked since 2000, a measure of bike safety that controls for increased usage. There is concurrent evidence that [**access to public transit**](https://www.citylab.com/transportation/2015/05/stranded-how-americas-failing-public-transportation-increases-inequality/393506/) is disparate throughout the city. I was unable to find reliable sources on equitable bike lane access. 
+
+I hypothesize there are neighborhoods with outsized shares of cyclist injuries which can be predicted by lack of access to (protected) bike lanes, lack of access to public transit, and faster street traffic. I hope to inform a discussion around resource allocation to low-income neighborhoods where preventable injury and death hamper cyclist transportation.             
   
-[**NYC DOT**](http://web.mta.info/sandy/CanarsieTunnelRebuildingProcess.html#sdtr) has predicted about 2% of L Line riders to switch to cycling, while about 79% are predicted to move to other subway lines. I could investigate the dispersion of L Train riders to other options as a whole if data is available, but for now I will focus on cyclist safety as it's more approachable with currently available data.    
 
 ### Now let's look at some two-wheeled data.   
 
@@ -268,6 +271,10 @@ join_poly <- join %>%
          Population, accidents_per_capita, accidents_per_capita_sqrt, geometry) %>% 
   st_as_sf()
 ```
+
+Recreating the DOT's cyclist safety metric across neighborhoods proves difficult with existing data. Their metric is available as-is and tracks injuries and deaths per 10 million miles over time, but there is no source that tracks miles biked in any strict location-based dimension. 
+
+I use NTA population as a proxy for bike ridership with the understanding that neighborhood population doesn't directly correlate with ridership. This is done to control for dense neighborhoods that may have higher incidence of accidents due to more people traveling through them.  
 
 ```{r animated_map, echo=FALSE, layout='l-screen-inset'}
 # create chloropleth map with accidents per capita fill, change graphics options for 1080p export
