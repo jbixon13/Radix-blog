@@ -12,7 +12,16 @@
       <link>https://jasonbixonblog.netlify.com</link>
     </image>
     <generator>Distill</generator>
-    <lastBuildDate>Sun, 14 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 16 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>A date with Mapdeck</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixonblog.netlify.com/posts/2019-06-16-a-date-with-mapdeck</link>
+      <description>Deck.gl is cool, Deck.gl in R is cooler.</description>
+      <guid>https://jasonbixonblog.netlify.com/posts/2019-06-16-a-date-with-mapdeck</guid>
+      <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-06-16-a-date-with-mapdeck/preview.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>MTA Doom and Gloom</title>
       <dc:creator>Jason Bixon</dc:creator>

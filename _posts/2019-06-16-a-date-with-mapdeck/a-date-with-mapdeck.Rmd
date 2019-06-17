@@ -1,0 +1,58 @@
+---
+title: "A date with Mapdeck"
+description: |
+  Deck.gl is cool, Deck.gl in R is cooler.
+preview: preview.jpg
+author:
+  - name: Jason Bixon
+    url: https://jasonbixonblog.netlify.com
+    affiliation: Merkle Inc.
+    affiliation_url: https://merkleinc.com
+date: 06-16-2019
+repository_url: https://github.com/jbixon13/Radix-blog
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(sf)
+library(mapdeck)
+set_token(Sys.getenv('MAPBOX'))
+```
+
+```{r}
+url <- 'https://raw.githubusercontent.com/plotly/datasets/master/2011_february_aa_flight_paths.csv'
+flights <- read.csv(url)
+flights$id <- seq_len(nrow(flights))
+flights$stroke <- sample(1:3, size = nrow(flights), replace = T)
+```
+
+
+```{r} 
+mapdeck(style ='mapbox://styles/mapbox/dark-v9', pitch = 45) %>%
+  add_arc(
+    data = flights,
+    layer_id = "arc_layer",
+    origin = c("start_lon", "start_lat"),
+    destination = c("end_lon", "end_lat"),
+    stroke_from = "airport1",
+    stroke_to = "airport2",
+    stroke_width = 'stroke'
+    )
+
+```
+
+Coming soon.  
+
+***
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+

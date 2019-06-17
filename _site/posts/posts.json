@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2019-06-16-a-date-with-mapdeck/",
+    "title": "A date with Mapdeck",
+    "description": "Deck.gl is cool, Deck.gl in R is cooler.",
+    "author": [
+      {
+        "name": "Jason Bixon",
+        "url": "https://jasonbixonblog.netlify.com"
+      }
+    ],
+    "date": "2019-06-16",
+    "categories": [],
+    "preview": "posts/2019-06-16-a-date-with-mapdeck/preview.jpg",
+    "last_modified": "2019-06-17T00:05:04-04:00"
+  },
+  {
     "path": "posts/2019-04-14-mta-shutdown/",
     "title": "MTA Doom and Gloom",
     "description": "Is the NYC subway system as dire as we say it is?",
