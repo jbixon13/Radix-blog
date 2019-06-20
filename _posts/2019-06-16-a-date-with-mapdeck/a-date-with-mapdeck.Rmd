@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(sf)
 library(mapdeck)
-set_token(Sys.getenv('MAPBOX'))
+set_token(Sys.getenv('MAPBOX')) # must use your own Mapbox Access Token if reproducing
 ```
 
 ```{r}
