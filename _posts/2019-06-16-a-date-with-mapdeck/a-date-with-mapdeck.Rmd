@@ -33,6 +33,12 @@ MTA <- tidytransit::read_gtfs('data/gtfs.zip') %>%
   gtfs_as_sf()
 ```
 
+
+```{r}
+meteorite <- readRDS('data/sf.rds')
+```
+
+
 ```{r}
 times <- MTA$stop_times
 routes <- MTA$trips
@@ -57,11 +63,10 @@ max <- max(MTA$stop_times$arrival_time)
                name = c('trip', 'trip', 'trip')
                
                    ) %>% 
-  mutate(m = as.integer(m)) %>% 
   st_as_sf(coords = c('x', 'y', 'z'), crs = 4326)
 
-s1 <- min(min$m)
-e1 <- max(min$m)
+#s1 <- min(min$m)
+#e1 <- max(min$m)
 ```
 
 ### Coming soon.

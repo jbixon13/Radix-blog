@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2019-08-04-year-one-and-change-in-review/",
+    "title": "Year One in Review",
+    "description": "A reflection on my first year (and change) in the real world.",
+    "author": [
+      {
+        "name": "Jason Bixon",
+        "url": "https://jasonbixonblog.netlify.com"
+      }
+    ],
+    "date": "2019-08-04",
+    "categories": [],
+    "preview": "posts/2019-08-04-year-one-and-change-in-review/preview.png",
+    "last_modified": "2019-08-09T01:38:53-04:00",
+    "preview_width": 1600,
+    "preview_height": 1200
+  },
+  {
     "path": "posts/2019-06-16-a-date-with-mapdeck/",
     "title": "A date with Mapdeck",
     "description": "Deck.gl is cool, Deck.gl in R is cooler.",
