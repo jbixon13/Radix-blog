@@ -22,6 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r message=FALSE, echo=FALSE, warning=FALSE}
 library(tidyverse)
+library(forcats)
 library(lubridate)
 library(plotly)
 library(scales)
@@ -51,7 +52,7 @@ NYC has seen an [**exponential increase**](http://www.nyc.gov/html/dot/downloads
 I hypothesize there are neighborhoods with outsized shares of cyclist injuries which can be predicted by lack of access to (protected) bike lanes, lack of access to public transit, and faster street traffic. I hope to inform a discussion around resource allocation to low-income neighborhoods where preventable injury and death hamper cyclist transportation.             
   
 
-### Now let's look at some two-wheeled data.   
+## Let's get a quick understanding of bikes in New York.   
 
 ```{r date_manipulation, echo=FALSE}
 # convert date to a date variable
@@ -70,6 +71,30 @@ sub <- sub %>%
   summarize(cyclist_injuries = sum(`NUMBER OF CYCLIST INJURED`))
 
 ```
+
+```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
+# read in shapefile
+bike_network <- readOGR(dsn = 'data/20180906_current_bike_network', layer = '20180906_current_bike_network')
+
+# convert to sf and transform to web map projection  
+bike_network <- st_as_sf(bike_network)
+bike_network_trans <- st_transform(bike_network, 4326)
+
+bike_network_trans <- bike_network_trans %>% 
+  mutate(labs = paste0('<strong>Street: </strong>', street,
+                       '<br><strong>Installed: </strong>', instdate,
+    '<br><strong>Modified: </strong>', moddate,
+    '<br><strong>Lanes: </strong>', lanecount,
+    '<br><strong>Path Type Endpoint: </strong>', ft_facilit,
+    '<br><strong>Path Type Startpoint: </strong>', tf_facilit))
+
+labs <- as.list(bike_network_trans$labs)
+```
+
+
+### When do cyclist injuries and accidents happen?
+
+<br/>
 
 ```{r injuries_plotly, echo=FALSE, message=FALSE, out.width='100%'}
 # plot cyclist injuries per week 
@@ -92,26 +117,89 @@ ggplotly(plt.sub) %>%
   config(displayModeBar = FALSE, scrollZoom = FALSE)
 ```
 
-### And now a map of cyclist injuries and deaths over the last few years.   
+### What kinds of bike paths are available in the city?
 
-```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
-# read in shapefile
-bike_network <- readOGR(dsn = 'data/20180906_current_bike_network', layer = '20180906_current_bike_network')
+<br/>
 
-# convert to sf and transform to web map projection  
-bike_network <- st_as_sf(bike_network)
-bike_network_trans <- st_transform(bike_network, 4326)
+```{r}
+path_type <- bike_network_trans 
 
-bike_network_trans <- bike_network_trans %>% 
-  mutate(labs = paste0('<strong>Street: </strong>', street,
-                       '<br><strong>Installed: </strong>', instdate,
-    '<br><strong>Modified: </strong>', moddate,
-    '<br><strong>Lanes: </strong>', lanecount,
-    '<br><strong>Path Type Endpoint: </strong>', ft_facilit,
-    '<br><strong>Path Type Startpoint: </strong>', tf_facilit))
+# convert NA path types to explicit factor level
+path_type$ft_facilit <- fct_explicit_na(path_type$ft_facilit)
 
-labs <- as.list(bike_network_trans$labs)
+# Collapse small and NA path types into Other 
+path_type$ft_facilit <- fct_collapse(path_type$ft_facilit, 
+                                     Other = c('Link',
+                                               'Sidewalk',
+                                               'Ped Plaza',
+                                               'Dirt Trail',
+                                               'Buffered Conventional',
+                                               '(Missing)'
+                                               )
+                                     )
+
+
+path_type <- path_type %>% 
+  mutate(year_installed = year(instdate)) %>%
+  group_by(ft_facilit, year_installed) %>% 
+  arrange(ft_facilit, year_installed) %>% 
+  ungroup() %>%
+  group_by(ft_facilit) %>%
+  # Get cumulative sum of miles by path type
+  mutate(cum_miles = cumsum(LaneMiles)) %>% 
+  ungroup() %>% 
+  group_by(ft_facilit, year_installed) %>% 
+  # Summarize into path type x year summary with cumulative sum of miles
+  summarize(count = n(), miles = round(max(cum_miles), 2)) %>%
+  filter(year_installed > 2000) %>%
+  as_tibble() %>% 
+  select(-geometry)
+
+# Manually re-define factors to put Other at bottom
+path_type$ft_facilit <- path_type$ft_facilit %>% 
+  factor(levels = c('Bike-Friendly Parking', 
+                    'Curbside',
+                    'Greenway',
+                    'Protected Path',
+                    'Sharrows',
+                    'Signed Route',
+                    'Standard',
+                    'Other'
+                    )
+         )
+# Dataset is missing Greenway installations in 2018 (or there may not be any. Manually add 2017 max)
+man_add <- tibble(ft_facilit = factor('Greenway'), year_installed = 2018, count = 0, miles = 309.13)
+
+path_type <- path_type %>% 
+  dplyr::bind_rows(man_add)
+  
+
+path_type <- path_type %>% 
+  arrange(ft_facilit, year_installed)
+
+# Stacked bar chart of miles of path type by year
+path_type_plot <- ggplot(path_type) +
+  geom_bar(aes(x = year_installed, y = miles, fill = ft_facilit), position = 'stack', stat = 'identity') + 
+  theme_classic() +
+  labs(x = 'Year', y = 'Miles', fill = 'Path Type') + 
+  theme(legend.title = element_blank()) + 
+  scale_fill_viridis_d()
+
+# convert to plotly object
+ggplotly(path_type_plot) %>% 
+  layout(title = list(text = 'Bike paths have increased exponentially in the last 20 years.',
+                      font = list(
+                        size = 16
+                        )
+                      )
+         ) %>% 
+  config(displayModeBar = FALSE, scrollZoom = FALSE)
 ```
+
+
+### Where do cyclist injuries and deaths occur?   
+
+<br/>
 
 ```{r leaflet, echo=FALSE, warning=FALSE, layout='l-screen-inset', fig.height=5}
 # preferCanvas to improve performance with high volume of markers
@@ -181,7 +269,7 @@ set_token(Sys.getenv('MAPBOX')) # must use your own Mapbox Access Token if repro
 mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized map with buildings added
         location = c(-73.987341, 40.724758),
         bearing = 14.9,
-        zoom = 12.1,
+        zoom = 14.1,
         pitch = 45) %>% 
   add_path(data = bike_network_trans,
            layer_id = 'paths',
@@ -290,6 +378,8 @@ join_poly <- join %>%
   st_as_sf()
 ```
 
+<br/> 
+
 Recreating the DOT's cyclist safety metric across neighborhoods proves difficult with existing data. Their metric is available as-is and tracks injuries and deaths per 10 million miles over time, but there is no source that tracks miles biked in any strict location-based dimension. 
 
 I use NTA population as a proxy for bike ridership with the understanding that neighborhood population doesn't directly correlate with ridership. This is done to control for dense neighborhoods that may have higher incidence of accidents due to more people traveling through them.  
@@ -307,46 +397,15 @@ map_base <- ggplot(join_poly) +
   theme(legend.text = element_text(size = 20)) +
   theme(panel.grid = element_line(color = "transparent")) 
 
-#map_base
-
 # animate by year, identify current year in title
 anim <- map_base +
   labs(title = 'Cyclist injuries per capita per year in NYC', subtitle = 'Year: {closest_state}') +
   transition_states(year)
 
-#anim
-
 anim <- animate(anim, width = 1920, height = 1080)
+
 anim
-#anim_save(filename = anim.gif)
 ```
-
-```{r}
-path_base <- ggplot(bike_network_trans) +
-  geom_sf() +
-  theme_void() + 
-  theme(panel.grid = element_line(color = "transparent")) 
-
-path_base
-# 
-# path_anim <- path_base + 
-#   transition_states(instdate)
-# 
-# path_anim
-```
-
-```{r}
-tst <- bike_network_trans %>% 
-  mutate(year_installed = year(instdate)) %>%
-  group_by(year_installed, ft_facilit) %>% 
-  arrange(year_installed, ft_facilit) %>% 
-  mutate(cum_miles = cumsum(LaneMiles)) %>%   
-  summarize(count = n(), miles = max(cum_miles))
-
-ggplot(tst) + 
-  geom_line(aes(x = year_installed, y = miles))
-```
-
 
 
 ```{r notes}
