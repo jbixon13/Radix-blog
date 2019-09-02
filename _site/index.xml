@@ -32,6 +32,15 @@
       <media:content url="https://jasonbixonblog.netlify.com/posts/2019-06-16-a-date-with-mapdeck/preview.jpg" medium="image" type="image/jpeg"/>
     </item>
     <item>
+      <title>Mapping Cyclist Safety in New York City</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</link>
+      <description>Is there a relationship between bike path access and cyclist injuries?</description>
+      <guid>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</guid>
+      <pubDate>Mon, 20 May 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg" medium="image" type="image/jpeg"/>
+    </item>
+    <item>
       <title>MTA Doom and Gloom</title>
       <dc:creator>Jason Bixon</dc:creator>
       <link>https://jasonbixonblog.netlify.com/posts/2019-04-14-mta-shutdown</link>
@@ -48,15 +57,6 @@
       <guid>https://jasonbixonblog.netlify.com/posts/2019-04-02-shiny-is-a-godsend</guid>
       <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
       <media:content url="https://jasonbixonblog.netlify.com/posts/2019-04-02-shiny-is-a-godsend/preview.jpg" medium="image" type="image/jpeg"/>
-    </item>
-    <item>
-      <title>Mapping Cyclist Safety in New York City</title>
-      <dc:creator>Jason Bixon</dc:creator>
-      <link>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</link>
-      <description>Is there a relationship between bike path access and cyclist injuries?</description>
-      <guid>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</guid>
-      <pubDate>Mon, 28 Jan 2019 00:00:00 +0000</pubDate>
-      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg" medium="image" type="image/jpeg"/>
     </item>
     <item>
       <title>New Year, New (First) Blog</title>

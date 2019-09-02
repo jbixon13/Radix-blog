@@ -9,7 +9,7 @@ author:
     url: https://jasonbixon.netlify.com
     affiliation: Merkle Inc.
     affiliation_url: https://merkleinc.com
-date: 01-28-2019
+date: 05-20-2019
 repository_url: https://github.com/jbixon13/Radix-blog
 output:
   radix::radix_article:

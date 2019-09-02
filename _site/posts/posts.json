@@ -32,6 +32,21 @@
     "last_modified": "2019-06-25T23:47:28-04:00"
   },
   {
+    "path": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/",
+    "title": "Mapping Cyclist Safety in New York City",
+    "description": "Is there a relationship between bike path access and cyclist injuries?",
+    "author": [
+      {
+        "name": "Jason Bixon",
+        "url": "https://jasonbixon.netlify.com"
+      }
+    ],
+    "date": "2019-05-20",
+    "categories": [],
+    "preview": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg",
+    "last_modified": "2019-09-02T01:26:57-04:00"
+  },
+  {
     "path": "posts/2019-04-14-mta-shutdown/",
     "title": "MTA Doom and Gloom",
     "description": "Is the NYC subway system as dire as we say it is?",
@@ -60,21 +75,6 @@
     "categories": [],
     "preview": "posts/2019-04-02-shiny-is-a-godsend/preview.jpg",
     "last_modified": "2019-04-30T00:26:37-04:00"
-  },
-  {
-    "path": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/",
-    "title": "Mapping Cyclist Safety in New York City",
-    "description": "Is there a relationship between bike path access and cyclist injuries?",
-    "author": [
-      {
-        "name": "Jason Bixon",
-        "url": "https://jasonbixon.netlify.com"
-      }
-    ],
-    "date": "2019-01-28",
-    "categories": [],
-    "preview": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg",
-    "last_modified": "2019-09-01T20:37:40-04:00"
   },
   {
     "path": "posts/2019-01-24-new-year-new-first-blog/",
