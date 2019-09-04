@@ -121,7 +121,7 @@ ggplotly(plt.sub) %>%
 
 <br/>
 
-```{r}
+```{r path_types}
 path_type <- bike_network_trans 
 
 # convert NA path types to explicit factor level
@@ -168,7 +168,21 @@ path_type$ft_facilit <- path_type$ft_facilit %>%
                     )
          )
 # Dataset is missing Greenway installations in 2018 (or there may not be any. Manually add 2017 max)
-man_add <- tibble(ft_facilit = factor('Greenway'), year_installed = 2018, count = 0, miles = 309.13)
+man_add <- tibble(ft_facilit = factor('Greenway',
+                                      levels = c('Bike-Friendly Parking',
+                                                 'Curbside',
+                                                 'Greenway',
+                                                 'Protected Path',
+                                                 'Sharrows',
+                                                 'Signed Route',
+                                                 'Standard',
+                                                 'Other'
+                                                 )
+                                      ),
+                  year_installed = 2018,
+                  count = 0,
+                  miles = 309.13
+                  )
 
 path_type <- path_type %>% 
   dplyr::bind_rows(man_add)
@@ -263,13 +277,17 @@ map <- leaflet(data = NYPD, options = leafletOptions(minZoom = 11, maxZoom = 18,
 map
 ```
 
+### An alternative map implemented in Deck.gl: 
+
+<br/>
+
 ```{r mapdeck, layout='l-page', fig.height=4, out.width='100%', fig.align='center'} 
 set_token(Sys.getenv('MAPBOX')) # must use your own Mapbox Access Token if reproducing
 
 mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized map with buildings added
         location = c(-73.987341, 40.724758),
         bearing = 14.9,
-        zoom = 14.1,
+        zoom = 13.1,
         pitch = 45) %>% 
   add_path(data = bike_network_trans,
            layer_id = 'paths',
@@ -277,7 +295,16 @@ mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized 
            stroke_colour = 'ft_facilit',
            tooltip = 'labs',
            stroke_width = 3
-           )
+           ) %>% 
+  add_scatterplot(data = NYPD[NYPD$`NUMBER OF CYCLIST INJURED` > 0 | NYPD$`NUMBER OF CYCLIST KILLED` > 0,],
+                  layer_id = 'points',
+                  lon = 'LONGITUDE',
+                  lat = 'LATITUDE',
+                  radius = 20,
+                  radius_min_pixels = 2,
+                  radius_max_pixels = 25,
+                  fill_opacity = .7,
+                  )
 ```
 
 
@@ -383,6 +410,8 @@ join_poly <- join %>%
 Recreating the DOT's cyclist safety metric across neighborhoods proves difficult with existing data. Their metric is available as-is and tracks injuries and deaths per 10 million miles over time, but there is no source that tracks miles biked in any strict location-based dimension. 
 
 I use NTA population as a proxy for bike ridership with the understanding that neighborhood population doesn't directly correlate with ridership. This is done to control for dense neighborhoods that may have higher incidence of accidents due to more people traveling through them.  
+
+**Note:** After further literature review, an alternative approach would be to model accident frequency for each street segment, including bike path occurance as a feature of each street segment (among other features). This allows for a more robust understanding of the interaction of bike paths with accident frequency. I could then go on to include socioeconomic data as a feature in the model or otherwise aggregate streets to neighborhoods to answer my primary research question. I prefer this approach to what I currently have implemented.   
 
 ```{r animated_map, echo=FALSE, layout='l-screen-inset'}
 # create chloropleth map with accidents per capita fill, change graphics options for 1080p export
