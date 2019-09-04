@@ -29,14 +29,12 @@ library(scales)
 library(forecast)
 library(leaflet)
 library(leaflet.extras)
-library(rgdal)
-library(sp)
+library(mapdeck)
 library(sf)
 library(htmltools)
 library(nycgeo)
 library(gganimate)
 library(gifski)
-library(mapdeck)
 ```
 
 ```{r data_read, message=FALSE, echo=FALSE}
@@ -74,10 +72,9 @@ sub <- sub %>%
 
 ```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
 # read in shapefile
-bike_network <- readOGR(dsn = 'data/20180906_current_bike_network', layer = '20180906_current_bike_network')
+bike_network <- read_sf('data/20180906_current_bike_network/20180906_current_bike_network.shp')
 
 # convert to sf and transform to web map projection  
-bike_network <- st_as_sf(bike_network)
 bike_network_trans <- st_transform(bike_network, 4326)
 
 bike_network_trans <- bike_network_trans %>% 
@@ -115,6 +112,22 @@ ggplotly(plt.sub) %>%
                       )
          ) %>% 
   config(displayModeBar = FALSE, scrollZoom = FALSE)
+```
+
+```{r}
+# plot_ly(sub,
+#         x = ~week,
+#         y = ~cyclist_injuries,
+#         marker = list(color = 'steelblue4', alpha = .7)
+#         ) %>% 
+#   layout(title = list(text = 'Cyclist injuries due to vehicle collisions are increasing.',
+#                       font = list(size = 16
+#                                   )
+#                       ), 
+#          xaxis = 'Year',
+#          yaxis = 'Cyclist Injuries Per Week'
+#          ) %>% 
+#   config(displayModeBar = FALSE, scrollZoom = FALSE)
 ```
 
 ### What kinds of bike paths are available in the city?
@@ -287,7 +300,7 @@ set_token(Sys.getenv('MAPBOX')) # must use your own Mapbox Access Token if repro
 mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized map with buildings added
         location = c(-73.987341, 40.724758),
         bearing = 14.9,
-        zoom = 13.1,
+        zoom = 12.1,
         pitch = 45) %>% 
   add_path(data = bike_network_trans,
            layer_id = 'paths',
