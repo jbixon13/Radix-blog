@@ -9,7 +9,7 @@ author:
     url: https://jasonbixon.netlify.com
     affiliation: Merkle Inc.
     affiliation_url: https://merkleinc.com
-date: 05-20-2019
+date: 09-11-2019
 repository_url: https://github.com/jbixon13/Radix-blog
 output:
   radix::radix_article:
@@ -43,12 +43,31 @@ NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE
 population <- read_csv('data/New_York_City_Population_By_Neighborhood_Tabulation_Areas.csv') # US census of population by NTA 
 ```
 
-I was originally inspired by this [**CityLab**](https://www.citylab.com/perspective/2018/12/new-york-city-electric-bikes-transit-crisis-de-blasio/577969/) article detailing the then-impending transportation crisis due to the L Line shutdown. Specifically, I was interested in observing whether the shutdown contributed to an increase in cyclist injuries due to motor vehicle collisions as about [**275,000 L Line riders**](https://ny.curbed.com/2018/10/3/17925038/nyc-subway-l-train-shutdown-mitigation-alternatives) would have sought alternatives. The MTA averted the shutdown at the 11th hour, leading me to a new research question. 
+```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
+# read in shapefile
+bike_network <- read_sf('data/20180906_current_bike_network/20180906_current_bike_network.shp')
 
-NYC has seen an [**exponential increase**](http://www.nyc.gov/html/dot/downloads/pdf/cycling-in-the-city.pdf) in bicycle usage in the last 20 years. It reports [**up to 76% fewer**](https://www1.nyc.gov/html/dot/downloads/pdf/nyc-cycling-risk.pdf) injuries or deaths per 10 million miles biked since 2000, a measure of bike safety that controls for increased usage. There is concurrent evidence that [**access to public transit**](https://www.citylab.com/transportation/2015/05/stranded-how-americas-failing-public-transportation-increases-inequality/393506/) is disparate throughout the city. I was unable to find reliable sources on equitable bike lane access. 
+# convert to sf and transform to web map projection  
+bike_network_trans <- st_transform(bike_network, 4326)
 
-I hypothesize there are neighborhoods with outsized shares of cyclist injuries which can be predicted by lack of access to (protected) bike lanes, lack of access to public transit, and faster street traffic. I hope to inform a discussion around resource allocation to low-income neighborhoods where preventable injury and death hamper cyclist transportation.             
-  
+bike_network_trans <- bike_network_trans %>% 
+  mutate(labs = paste0('<strong>Street: </strong>', street,
+                       '<br><strong>Installed: </strong>', instdate,
+    '<br><strong>Modified: </strong>', moddate,
+    '<br><strong>Lanes: </strong>', lanecount,
+    '<br><strong>Path Type Endpoint: </strong>', ft_facilit,
+    '<br><strong>Path Type Startpoint: </strong>', tf_facilit))
+
+labs <- as.list(bike_network_trans$labs)
+```
+
+New York City has seen an [**exponential increase**](http://www.nyc.gov/html/dot/downloads/pdf/cycling-in-the-city.pdf) in bicycle usage in the last 20 years. It reports [**up to 76% fewer**](https://www1.nyc.gov/html/dot/downloads/pdf/nyc-cycling-risk.pdf) injuries or deaths per 10 million miles biked since 2000, a measure of bike safety that controls for increased usage. Even so, the city has had an [**exceptionally deadly year**](https://www.nytimes.com/2019/08/21/nyregion/bike-deaths-nyc.html) for cyclists, leading many to feel the city needs to do more. There is [**existing evidence**](https://ajph.aphapublications.org/doi/full/10.2105/AJPH.2012.300762?journalCode=ajph) that (protected) biking infrastructure is an effective risk-reduction method. Some questions I seek to address:
+
+* What is the breakdown of biking infrastructure in New York City?
+* Where are injuries and deaths happening?
+* Is there a relationship between bike infrastructure (or lack thereof) and cyclist injuries and deaths?
+* Are there neighborhoods with less access to (protected) bike infrastructure? 
+  + If so, can they be predicted by socioeconomic status?
 
 ## Let's get a quick understanding of bikes in New York.   
 
@@ -69,25 +88,6 @@ sub <- sub %>%
   summarize(cyclist_injuries = sum(`NUMBER OF CYCLIST INJURED`))
 
 ```
-
-```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
-# read in shapefile
-bike_network <- read_sf('data/20180906_current_bike_network/20180906_current_bike_network.shp')
-
-# convert to sf and transform to web map projection  
-bike_network_trans <- st_transform(bike_network, 4326)
-
-bike_network_trans <- bike_network_trans %>% 
-  mutate(labs = paste0('<strong>Street: </strong>', street,
-                       '<br><strong>Installed: </strong>', instdate,
-    '<br><strong>Modified: </strong>', moddate,
-    '<br><strong>Lanes: </strong>', lanecount,
-    '<br><strong>Path Type Endpoint: </strong>', ft_facilit,
-    '<br><strong>Path Type Startpoint: </strong>', tf_facilit))
-
-labs <- as.list(bike_network_trans$labs)
-```
-
 
 ### When do cyclist injuries and accidents happen?
 
@@ -320,30 +320,6 @@ mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized 
                   )
 ```
 
-
-```{r time-series}
-# convert weekly crash data to a time-series object
-#ts_injuries <- ts(sub$cyclist_injuries, frequency = 52)
-# plot autocorrelation function
-#acf(ts_injuries)
-```
-
-```{r arima, echo=FALSE}
-#arima1 <- auto.arima(ts_injuries, stepwise = FALSE, trace = FALSE)
-#summary(arima1)
-```
-
-```{r bikepath_processing, echo=FALSE}
-# test <- NYPD %>%
-#   filter(LATITUDE != is.na(TRUE)) %>% 
-#   st_as_sf(coords = c('LATITUDE', 'LONGITUDE')) 
-#   
-# test_trans <- test %>% 
-#   st_transform(crs = 4326)
-# 
-# dist <- st_is_within_distance(test_trans, bike_network_trans, dist = 100)
-```
-
 ```{r lookup_table, echo=FALSE}
  
 year <- rep(2012:2018)
@@ -420,11 +396,7 @@ join_poly <- join %>%
 
 <br/> 
 
-Recreating the DOT's cyclist safety metric across neighborhoods proves difficult with existing data. Their metric is available as-is and tracks injuries and deaths per 10 million miles over time, but there is no source that tracks miles biked in any strict location-based dimension. 
-
-I use NTA population as a proxy for bike ridership with the understanding that neighborhood population doesn't directly correlate with ridership. This is done to control for dense neighborhoods that may have higher incidence of accidents due to more people traveling through them.  
-
-**Note:** After further literature review, an alternative approach would be to model accident frequency for each street segment, including bike path occurance as a feature of each street segment (among other features). This allows for a more robust understanding of the interaction of bike paths with accident frequency. I could then go on to include socioeconomic data as a feature in the model or otherwise aggregate streets to neighborhoods to answer my primary research question. I prefer this approach to what I currently have implemented.   
+My first attempt to understand accidents spatially led me to aggregate them within the Neighborhood Tabulation Area (NTA) they occur in and divide by NTA population. This shows not just which neighborhoods have the most accidents, but which have the most **per capita**. It shows more clearly where accidents are happening than by mapping each individual accident, but it does not say whether a neighborhood is over-indexed on accidents from an infrastructure perspective. Neighborhood population may not be insightful because it may have little to do with how many people bike there, or the kind of infrastructure they have, or traffic speeds. I will explore this further in the future. 
 
 ```{r animated_map, echo=FALSE, layout='l-screen-inset'}
 # create chloropleth map with accidents per capita fill, change graphics options for 1080p export
@@ -449,6 +421,59 @@ anim <- animate(anim, width = 1920, height = 1080)
 anim
 ```
 
+I then wanted to understand one of my primary questions: whether bike infrastructure could predict cyclist accidents. To do so, I combined the [**NYPD Motor Vehicle Collisions**](https://data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions-Crashes/h9gi-nx95) and [**NYC Street Centerline**](https://data.cityofnewyork.us/City-Government/NYC-Street-Centerline-CSCL-/exjm-f27b) datasets to get a distinct count of bike accidents for every street segment as a dependent variable. 
+
+Two [**simple and proven**](https://www.researchgate.net/publication/222659783_The_Statistical_Analysis_of_Crash-Frequency_Data_A_Review_and_Assessment_of_Methodological_Alternatives) models for regressing discrete count data are the poisson regression and negative-binomial regression. They are not without their flaws, but they are a good starting point.
+
+```{r accident_distance_calc}
+zip <- unzip('data/NYC_Street_Centerline_CSCL.zip', 
+             exdir = '/c/Users/jbjrV/OneDrive/Radix-blog/_posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/data')
+
+# use NAD83 crs for later distance operation
+streets <- read_sf(zip) %>% 
+  st_transform(3488)
+
+accidents <- NYPD %>% 
+  filter(LATITUDE != is.na(TRUE)) %>% 
+  filter(`NUMBER OF CYCLIST INJURED` > 0 | `NUMBER OF CYCLIST KILLED` > 0) %>% 
+  st_as_sf(coords = c('LONGITUDE', 'LATITUDE')) %>% 
+  st_set_crs(4326)
+
+# increase street width to assign accidents that fall within  
+streets_buffer <- streets %>% 
+  st_buffer(dist = 10) # 10 meter buffer seems to be the right size for NYC
+
+# transform to web mercator to align crs with accidents for intersect operation
+streets_buffer <- streets_buffer %>% 
+  st_transform(4326)  
+
+intersect <- st_intersects(streets_buffer, accidents)
+
+# get count of accidents that intersect with each street - one row per street
+intersect_count <- st_intersects(streets_buffer, accidents) %>% 
+  lengths() %>% 
+  enframe()
+
+# append accident count onto original street table
+streets_accidents <- streets %>% 
+  bind_cols(intersect_count) %>% 
+  select(-name) %>% 
+  rename(accidents = value) %>%
+  mutate(bike_lane = factor(bike_lane)) %>% 
+  st_as_sf()
+```
+
+```{r model}
+# poisson vs. negative binomial regression
+# dispersion is when variance > mean - NB is better for this 
+# when dispersion statistic is close to one, use poisson
+# when > 1, use negative binomial 
+
+p <- glm(accidents ~ bike_lane, family = 'poisson', data = streets_accidents)
+
+summary(p)
+```
+
 
 ```{r notes}
 #introduction - need to redo
@@ -466,21 +491,9 @@ anim
 
 ***
 
-### Planned Updates / Notes:    
+### Note:    
 
-This is an ongoing project that I am doing in my free time. If you have any constructive criticism please feel free to reach out, especially with suggestions about spatial regression methodology.  
+This is an ongoing project that continues to evolve as I learn. If you have any constructive criticism please feel free to reach out, especially with suggestions about traffic accident modeling methodology.  
 
-* Methodology
-    + Need a way to do geospatial predictive modeling with a dataset that only has 1s, no 0s
-    + How to understand relationship between accidents when we only have accident data, not non-accidents
-    + Consider using Citibike data as a proxy to cyclist population, but do they behave differently?
-    + Look into spatial prediction methods (spatial autocorrelation, spatial regression, etc.)
-    + What trends are there in types of bike paths being constructed over time?
-* Time-Series
-    + More rigorous analysis of cyclist injuries
-    + Use ARIMA model to remove seasonality, conclude whether injuries are increasing
-    + Are injuries increasing because more people are biking or something else?    
-* Geospatial
-    + Consider changing map to chloropleths (and use accidents per capita)
-    + Find a way to visualize changes over time, whether through leaflet or gganimate or otherwise
-    + Need function that can calculate a point's (accident) nearest polyline (bike path) and return features (type of path)  
+    
+

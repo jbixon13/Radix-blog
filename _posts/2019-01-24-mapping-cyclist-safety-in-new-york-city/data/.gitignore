@@ -37,3 +37,8 @@ rsconnect/
 
 # Datasets
 *.csv
+*.zip
+*.shp
+*.dbf
+*.sbn
+*.shx

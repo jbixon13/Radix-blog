@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/",
+    "title": "Mapping Cyclist Safety in New York City",
+    "description": "Is there a relationship between bike path access and cyclist injuries?",
+    "author": [
+      {
+        "name": "Jason Bixon",
+        "url": "https://jasonbixon.netlify.com"
+      }
+    ],
+    "date": "2019-09-11",
+    "categories": [],
+    "preview": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg",
+    "last_modified": "2019-09-11T01:32:44-04:00"
+  },
+  {
     "path": "posts/2019-08-04-year-one-and-change-in-review/",
     "title": "Year One in Review",
     "description": "A reflection on my first year (and change) in the real world.",
@@ -30,21 +45,6 @@
     "categories": [],
     "preview": "posts/2019-06-16-a-date-with-mapdeck/preview.jpg",
     "last_modified": "2019-06-25T23:47:28-04:00"
-  },
-  {
-    "path": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/",
-    "title": "Mapping Cyclist Safety in New York City",
-    "description": "Is there a relationship between bike path access and cyclist injuries?",
-    "author": [
-      {
-        "name": "Jason Bixon",
-        "url": "https://jasonbixon.netlify.com"
-      }
-    ],
-    "date": "2019-05-20",
-    "categories": [],
-    "preview": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg",
-    "last_modified": "2019-09-04T00:51:18-04:00"
   },
   {
     "path": "posts/2019-04-14-mta-shutdown/",

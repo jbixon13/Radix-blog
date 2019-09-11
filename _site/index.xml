@@ -12,7 +12,16 @@
       <link>https://jasonbixonblog.netlify.com</link>
     </image>
     <generator>Radix</generator>
-    <lastBuildDate>Sun, 04 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 11 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Mapping Cyclist Safety in New York City</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</link>
+      <description>Is there a relationship between bike path access and cyclist injuries?</description>
+      <guid>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</guid>
+      <pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg" medium="image" type="image/jpeg"/>
+    </item>
     <item>
       <title>Year One in Review</title>
       <dc:creator>Jason Bixon</dc:creator>
@@ -30,15 +39,6 @@
       <guid>https://jasonbixonblog.netlify.com/posts/2019-06-16-a-date-with-mapdeck</guid>
       <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
       <media:content url="https://jasonbixonblog.netlify.com/posts/2019-06-16-a-date-with-mapdeck/preview.jpg" medium="image" type="image/jpeg"/>
-    </item>
-    <item>
-      <title>Mapping Cyclist Safety in New York City</title>
-      <dc:creator>Jason Bixon</dc:creator>
-      <link>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</link>
-      <description>Is there a relationship between bike path access and cyclist injuries?</description>
-      <guid>https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city</guid>
-      <pubDate>Mon, 20 May 2019 00:00:00 +0000</pubDate>
-      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/preview.jpg" medium="image" type="image/jpeg"/>
     </item>
     <item>
       <title>MTA Doom and Gloom</title>
