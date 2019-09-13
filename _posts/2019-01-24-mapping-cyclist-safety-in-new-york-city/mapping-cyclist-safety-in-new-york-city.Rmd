@@ -35,6 +35,7 @@ library(htmltools)
 library(nycgeo)
 library(gganimate)
 library(gifski)
+library(stargazer)
 ```
 
 ```{r data_read, message=FALSE, echo=FALSE}
@@ -90,6 +91,35 @@ sub <- sub %>%
 ```
 
 ### When do cyclist injuries and accidents happen?
+
+<br/>
+
+```{r}
+heatmap <- NYPD %>% 
+  mutate(day = wday(DATE)) %>% 
+  mutate(hour = hour(TIME)) %>% 
+  group_by(day, hour) %>% 
+  summarize(injuries = sum(`NUMBER OF CYCLIST INJURED`)) %>% 
+  ungroup() %>% 
+  mutate(day_char = as.factor(day)) %>% 
+  mutate(day_char = factor(day_char, ordered = TRUE, labels = c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')))
+
+ggplot(data = heatmap, aes(x = hour, y = day_char, fill = injuries)) + 
+  geom_tile() + 
+  scale_y_discrete(limits = rev(levels(heatmap$day_char))) + 
+  scale_x_continuous(breaks = rep(0:23)) +
+  labs(title = 'Most accidents occur during evening rush hour', fill = 'Injuries') + 
+  scale_fill_viridis_c() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank()
+        )
+```
+
+
+### What about historic trends?
 
 <br/>
 
@@ -463,7 +493,7 @@ streets_accidents <- streets %>%
   st_as_sf()
 ```
 
-```{r model}
+```{r model, results='asis'}
 # poisson vs. negative binomial regression
 # dispersion is when variance > mean - NB is better for this 
 # when dispersion statistic is close to one, use poisson
@@ -471,7 +501,15 @@ streets_accidents <- streets %>%
 
 p <- glm(accidents ~ bike_lane, family = 'poisson', data = streets_accidents)
 
-summary(p)
+nb <- MASS::glm.nb(accidents ~ bike_lane, data = streets_accidents)
+
+#summary(p)
+
+stargazer(p,
+          #nb, 
+          title = 'Model Summary',
+          #dep.var.labels = c('Poisson Regression', 'Negative-Binomial Regression'),
+          type = 'html')
 ```
 
 
