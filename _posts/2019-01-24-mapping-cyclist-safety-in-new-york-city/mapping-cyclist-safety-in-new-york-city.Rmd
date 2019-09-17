@@ -35,7 +35,7 @@ library(htmltools)
 library(nycgeo)
 library(gganimate)
 library(gifski)
-library(stargazer)
+library(sjPlot)
 ```
 
 ```{r data_read, message=FALSE, echo=FALSE}
@@ -489,11 +489,26 @@ streets_accidents <- streets %>%
   bind_cols(intersect_count) %>% 
   select(-name) %>% 
   rename(accidents = value) %>%
-  mutate(bike_lane = factor(bike_lane)) %>% 
+  mutate(bike_lane = fct_explicit_na(bike_lane)) %>%  
+  # mutate(bike_lane = factor(bike_lane,
+  #                           labels = c('Class I',
+  #                                      'Class II',
+  #                                      'Class III',
+  #                                      'Links',
+  #                                      'Class I, II',
+  #                                      'Class II, III',
+  #                                      'Stairs',
+  #                                      'Class I, III',
+  #                                      'Class II, I',
+  #                                      'Class III, I',
+  #                                      'Class III, II'
+  #                                      )
+  #                           )
+  #        ) %>% 
   st_as_sf()
 ```
 
-```{r model, results='asis'}
+```{r model}
 # poisson vs. negative binomial regression
 # dispersion is when variance > mean - NB is better for this 
 # when dispersion statistic is close to one, use poisson
@@ -503,13 +518,12 @@ p <- glm(accidents ~ bike_lane, family = 'poisson', data = streets_accidents)
 
 nb <- MASS::glm.nb(accidents ~ bike_lane, data = streets_accidents)
 
-#summary(p)
-
-stargazer(p,
-          #nb, 
-          title = 'Model Summary',
-          #dep.var.labels = c('Poisson Regression', 'Negative-Binomial Regression'),
-          type = 'html')
+sjPlot::tab_model(p,
+                  nb,
+                  dv.labels = c('Poisson', 'Negative-Binomial'),
+                  title = 'Predicting Accident Count',
+                  p.style = 'asterisk'
+                  )
 ```
 
 
