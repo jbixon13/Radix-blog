@@ -490,21 +490,30 @@ streets_accidents <- streets %>%
   select(-name) %>% 
   rename(accidents = value) %>%
   mutate(bike_lane = fct_explicit_na(bike_lane)) %>%  
-  # mutate(bike_lane = factor(bike_lane,
-  #                           labels = c('Class I',
-  #                                      'Class II',
-  #                                      'Class III',
-  #                                      'Links',
-  #                                      'Class I, II',
-  #                                      'Class II, III',
-  #                                      'Stairs',
-  #                                      'Class I, III',
-  #                                      'Class II, I',
-  #                                      'Class III, I',
-  #                                      'Class III, II'
-  #                                      )
-  #                           )
-  #        ) %>% 
+  mutate(bike_lane = factor(bike_lane,
+                            levels = c('(Missing)',
+                                       '1',
+                                       '2',
+                                       '3',
+                                       '4',
+                                       '5',
+                                       '6',
+                                       '7',
+                                       '8',
+                                       '9'
+                                       ),
+                            labels = c('No Bike Lane',
+                                       'Class I',
+                                       'Class II',
+                                       'Class III',
+                                       'Links',
+                                       'Class I, II',
+                                       'Class II, III',
+                                       'Stairs',
+                                       'Class I, III',
+                                       'Class II, I')
+                            )
+         ) %>%
   st_as_sf()
 ```
 
@@ -522,21 +531,18 @@ sjPlot::tab_model(p,
                   nb,
                   dv.labels = c('Poisson', 'Negative-Binomial'),
                   title = 'Predicting Accident Count',
-                  p.style = 'asterisk'
+                  p.style = 'asterisk',string.intercept = 'No Bike Lane'
                   )
 ```
 
 
 ```{r notes}
-#introduction - need to redo
 # trend scatter plot - done, maybe look into time-series analysis
 # gif of NTAs - have accident counts, change to accidents/NTA population (and acknowledge issues with using 2010 survey data but it's better than a simple population map)
 # bar plot of accident causes - not done
 # leaflet - done, consider any simplifications but likely done
 # model predicting bike path/path type - not done 
 # aadt traffic / volume measurements of traffic 
-# look at how cities measure volume or traffic for cars and emulate for bikes
-# strava geolocation for bike data ??
 # conclusions - not done
 # seperate post about point aggregation in chloropleths - not until all else done 
 ```
