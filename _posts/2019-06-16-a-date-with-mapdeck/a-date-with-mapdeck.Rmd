@@ -71,7 +71,7 @@ max <- max(MTA$stop_times$arrival_time)
 
 ### Coming soon.
 
-```{r layout='l-page', fig.height=4, out.width='100%', fig.align='center'} 
+```{r layout='l-screen', fig.height=4, out.width='100%', fig.align='center'} 
 mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized map with buildings added
         location = c(-73.987341, 40.724758),
         bearing = 14.9,
