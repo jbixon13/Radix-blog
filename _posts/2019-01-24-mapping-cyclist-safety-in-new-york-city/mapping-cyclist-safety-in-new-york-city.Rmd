@@ -42,6 +42,18 @@ library(sjPlot)
 # read in datasets 
 NYPD <- read_csv('data/nypd-motor-vehicle-collisions.csv', col_types = list(DATE = col_character())) # NYPD collision data 
 population <- read_csv('data/New_York_City_Population_By_Neighborhood_Tabulation_Areas.csv') # US census of population by NTA 
+
+NYPD <- NYPD %>% 
+  mutate(labs = paste0('<strong>','Date: ', '</strong>', DATE, '<br/>',
+                       '<strong>', 'Time: ', '</strong>', TIME, '<br/>',
+                       '<strong>', 'Injured: ', '</strong>', `NUMBER OF CYCLIST INJURED`, '<br/>',
+                       '<strong>', 'Killed: ', '</strong>', `NUMBER OF CYCLIST KILLED`, '<br/>',
+                       '<strong>', 'Vehicle Type 1: ', '</strong>', `VEHICLE TYPE CODE 1`, '<br/>',
+                       '<strong>', 'Cause - Vehicle 1: ', '</strong>', `CONTRIBUTING FACTOR VEHICLE 1`, '<br/>', 
+                       '<strong>', 'Vehicle Type 2: ', '</strong>', `VEHICLE TYPE CODE 2`, '<br/>',
+                       '<strong>', 'Cause - Vehicle 2: ', '</strong>', `CONTRIBUTING FACTOR VEHICLE 2`
+                       )
+         )
 ```
 
 ```{r bikepath_read, echo=FALSE, message=FALSE, results='hide'}
@@ -324,29 +336,38 @@ map
 
 <br/>
 
-```{r mapdeck, layout='l-page', fig.height=4, out.width='100%', fig.align='center'} 
+```{r mapdeck, layout='l-screen-inset', fig.height=4, out.width='100%', fig.align='center'} 
 set_token(Sys.getenv('MAPBOX')) # must use your own Mapbox Access Token if reproducing
 
 mapdeck(style ='mapbox://styles/jbixon/cjxchrj87086s1ct8cs8m351s', # customized map with buildings added
-        location = c(-73.987341, 40.724758),
-        bearing = 14.9,
-        zoom = 12.1,
+        location = c(-73.967, 40.699),
+        bearing = 10.10,
+        zoom = 14,
         pitch = 45) %>% 
   add_path(data = bike_network_trans,
            layer_id = 'paths',
            auto_highlight = TRUE,
            stroke_colour = 'ft_facilit',
            tooltip = 'labs',
-           stroke_width = 3
+           stroke_width = 4,
+           legend = TRUE
            ) %>% 
+#  add_grid(data = NYPD[NYPD$`NUMBER OF CYCLIST INJURED` > 0 | NYPD$`NUMBER OF CYCLIST KILLED` > 0,],
+#           layer_id = 'grid',
+#           lon = 'LONGITUDE',
+#           lat = 'LATITUDE',
+#           cell_size = 100,
+#           elevation_scale = 1)
   add_scatterplot(data = NYPD[NYPD$`NUMBER OF CYCLIST INJURED` > 0 | NYPD$`NUMBER OF CYCLIST KILLED` > 0,],
                   layer_id = 'points',
                   lon = 'LONGITUDE',
                   lat = 'LATITUDE',
                   radius = 20,
-                  radius_min_pixels = 2,
-                  radius_max_pixels = 25,
+                  radius_min_pixels = 1,
+                  radius_max_pixels = 20,
                   fill_opacity = .7,
+                  fill_colour = '#52b7e3',
+                  tooltip = 'labs'
                   )
 ```
 
