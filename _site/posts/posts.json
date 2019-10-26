@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2019-10-26-learning-devops-unfortunately/",
+    "title": "Learning DevOps, Unfortunately",
+    "description": "Accepting my fate and building robust software.",
+    "author": [
+      {
+        "name": "Jason Bixon",
+        "url": "https://jasonbixon.netlify.com"
+      }
+    ],
+    "date": "2019-10-26",
+    "categories": [],
+    "preview": "posts/2019-10-26-learning-devops-unfortunately/preview.png",
+    "last_modified": "2019-10-26T19:23:38-04:00",
+    "preview_width": 800,
+    "preview_height": 600
+  },
+  {
     "path": "posts/2019-01-24-mapping-cyclist-safety-in-new-york-city/",
     "title": "Mapping Cyclist Safety in New York City",
     "description": "Is there a relationship between bike path access and cyclist injuries?",

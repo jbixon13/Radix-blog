@@ -11,8 +11,17 @@
       <url>https://jasonbixonblog.netlify.com/images/favicon2.png</url>
       <link>https://jasonbixonblog.netlify.com</link>
     </image>
-    <generator>Distill</generator>
-    <lastBuildDate>Wed, 11 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Radix</generator>
+    <lastBuildDate>Sat, 26 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Learning DevOps, Unfortunately</title>
+      <dc:creator>Jason Bixon</dc:creator>
+      <link>https://jasonbixonblog.netlify.com/posts/2019-10-26-learning-devops-unfortunately</link>
+      <description>Accepting my fate and building robust software.</description>
+      <guid>https://jasonbixonblog.netlify.com/posts/2019-10-26-learning-devops-unfortunately</guid>
+      <pubDate>Sat, 26 Oct 2019 00:00:00 +0000</pubDate>
+      <media:content url="https://jasonbixonblog.netlify.com/posts/2019-10-26-learning-devops-unfortunately/preview.png" medium="image" type="image/png" width="800" height="600"/>
+    </item>
     <item>
       <title>Mapping Cyclist Safety in New York City</title>
       <dc:creator>Jason Bixon</dc:creator>
